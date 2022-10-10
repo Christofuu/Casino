@@ -1,12 +1,11 @@
 import java.util.Random;
-
-// import java.util.Arrays;
+import java.util.ArrayList;
 
 public class CardDeck extends Cards
 	// A card deck IS-many cards
 {  
-	private final int deckSize = 52;
-	private Cards[] deck =  new Cards[deckSize];
+	// private final int deckSize = 52;
+	private ArrayList<Cards> deck =  new ArrayList<Cards>();
 	// Might have to make this an array list
 	// It being resizable would be useful for
 	// dealing out cards w.o replacement
@@ -30,8 +29,9 @@ public class CardDeck extends Cards
 	{
 		for (i = 0; i < 4; ++i)
 		{
-			deck[j] = new Cards();
-			deck[j].setSuit((Suits)suitArr[i]);
+			// deck[j] = new Cards();
+			deck.add(j, new Cards());
+			deck.get(j).setSuit((Suits)suitArr[i]);
 			++j;
 		}
 		
@@ -41,20 +41,20 @@ public class CardDeck extends Cards
 	{
 		for (k = 0; k < 13; ++k)
 		{
-			deck[j].setRank((Ranks)rankArr[k]);
+			deck.get(j).setRank((Ranks)rankArr[k]);
 			++j;
 		}
 	}
 	}
 	
-	public Cards[] getCardDeck()
+	public ArrayList<Cards> getCardDeck()
 	{
 		return deck;
 	}
 	
 	public Cards getCard(int i)
 	{
-		return deck[i];
+		return deck.get(i);
 	}
 	
 	public void shuffleDeck(CardDeck cardDeck)
@@ -66,9 +66,12 @@ public class CardDeck extends Cards
 		for (int i = 0; i < x; i++)
 		{
 			int rd = random.nextInt(x);
-			Cards temp = new Cards(cardDeck.deck[rd]);
-			cardDeck.deck[rd] = cardDeck.deck[i];
-			cardDeck.deck[i] = temp;
+			//Cards temp = new Cards(cardDeck.deck[rd]);
+			//cardDeck.deck[rd] = cardDeck.deck[i];
+			//cardDeck.deck[i] = temp;
+			Cards temp = new Cards(cardDeck.deck.get(rd));
+			cardDeck.deck.set(rd, cardDeck.deck.get(i));
+			cardDeck.deck.set(i, temp);
 		}
 	}
 }

@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 
 public class Dealer
 {
@@ -5,20 +6,25 @@ public class Dealer
 	// Dealer HAS a deck of cards to deal from //
 	private CardDeck dealersDeck = new CardDeck();
 	// Dealer HAS a set of cards in the game;
-	private Cards[] dealersHand = new Cards[2];
+	private ArrayList<Cards> dealersHand = new ArrayList<Cards>(2);
 	
 	// CONSTRUCTORS //
 	public Dealer() {}
 	
-	public Dealer(CardDeck cardDeck, Cards[] hand)
+	public Dealer(CardDeck cardDeck, ArrayList<Cards> hand)
 	{
 		dealersDeck = cardDeck;
 		dealersDeck.setDeck();
+		dealersDeck.shuffleDeck(dealersDeck);
 		dealersHand = hand;
 	}
 	
 	// METHODS //
-	public void dealCards() {}
+	public void dealCards() 
+	{
+		// Assume deck is already shuffled.
+		
+	}
 	
 	
 }
