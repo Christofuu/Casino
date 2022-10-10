@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="15.0.0">
+  <zoom_level>5</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>50</x>
+      <y>290</y>
+      <w>105</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>_Class: Cards_
+--
+-Suits: enum
+-Ranks: enum
+-Suits suit: enum
+-Ranks rank: enum
+--
++Cards()
++Cards(Cards card)
++getSuit(): suit
++setSuit(Suits suit): void
++getRank(): rank
++setRank(): void
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>45</x>
+      <y>470</y>
+      <w>130</w>
+      <h>130</h>
+    </coordinates>
+    <panel_attributes>_Class: CardDeck_
+--
+-deckSize: int (52)
+-deck: Cards[deckSize]
+-rankArr: Ranks[]
+-suitArr: Suits[]
+--
++CardDeck()
++setDeck(): void
++getCardDeck(): deck
++getCard(int i): deck[i]
++shuffleDeck(CardDeck cardDeck): void
+--
+Responsibilities
+-- Resp1
+*-- Resp2*</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>90</x>
+      <y>385</y>
+      <w>15</w>
+      <h>95</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;170.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>205</x>
+      <y>290</y>
+      <w>140</w>
+      <h>55</h>
+    </coordinates>
+    <panel_attributes>_Class: Dealer_
+--
+-dealersDeck: CardDeck
+-dealersHand: Cards[]
+--
++Dealer()
++Dealer(CardDeck cardDeck, Cards[] hand)
++dealCards(): void
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>170</x>
+      <y>340</y>
+      <w>45</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;260.0;70.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>225</x>
+      <y>230</y>
+      <w>105</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>_Class: Blackjack_
+--
+-player: Player
+-dealer: Dealer
+
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>150</x>
+      <y>325</y>
+      <w>65</w>
+      <h>15</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;110.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>150</x>
+      <y>255</y>
+      <w>85</w>
+      <h>45</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;70.0;150.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>270</x>
+      <y>255</y>
+      <w>15</w>
+      <h>45</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;70.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>335</x>
+      <y>105</y>
+      <w>105</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>_AbstractClass: Games_
+--
+-stakes:
+-rules: Maybe make this a class
+which defines actions the 
+dealer and player can
+execute (i.e hit, stand, bet)
+-player: player
+--
+getStakes(): stakes
+setStakes(): stakes
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>335</x>
+      <y>45</y>
+      <w>105</w>
+      <h>35</h>
+    </coordinates>
+    <panel_attributes>_Class: Casino_
+--
+-Games: Games
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>270</x>
+      <y>180</y>
+      <w>75</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>130.0;10.0;10.0;100.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>380</x>
+      <y>75</y>
+      <w>15</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;60.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>445</x>
+      <y>230</y>
+      <w>105</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>_Class: Slots_
+--
+-reels: array
+-jackpot: int
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>435</x>
+      <y>180</y>
+      <w>75</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;130.0;100.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>155</x>
+      <y>105</y>
+      <w>105</w>
+      <h>65</h>
+    </coordinates>
+    <panel_attributes>_AbstractClass: Player_
+--
+-money: int
+-chips:
+-hand: Cards[]
+--
++cashIn: void
++cashOut: void
++playGame: void
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>255</x>
+      <y>130</y>
+      <w>90</w>
+      <h>15</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;160.0;10.0</additional_attributes>
+  </element>
+</diagram>
