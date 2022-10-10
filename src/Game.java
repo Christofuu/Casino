@@ -1,6 +1,6 @@
 
 public abstract class Game
 {
-	private int[] stakes;
+//	private int[] stakes;
 	
 }

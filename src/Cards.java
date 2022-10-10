@@ -36,6 +36,17 @@ public class Cards {
     
     public Cards(Cards card)
     {
+    	this.suit = card.getSuit();
+    	this.rank = card.getRank();
+    }
+    
+    public Cards getCards(Cards card)
+    {
+    	return card;
+    }
+    
+    public void setCards(Suits suit, Ranks rank)
+    {
     	this.suit = suit;
     	this.rank = rank;
     }
@@ -59,5 +70,31 @@ public class Cards {
 	{
 		this.rank = rank;
 	}
-    
+
+	@Override public String toString()
+	{
+		String returnString = new String();
+		
+		if (this.suit.toString() == "DIAMOND")
+		{
+			returnString = "\u2666";
+		}
+		
+		if (this.suit.toString() == "HEART")
+		{
+			returnString = "\u2665";
+		}
+		
+		if (this.suit.toString() == "SPADE")
+		{
+			returnString = "\u2660";
+		}
+		
+		if (this.suit.toString() == "CLUB")
+		{
+			returnString = "\u2663";
+		}
+		
+		return this.rank.toString() + " " + returnString;
+	}
 }

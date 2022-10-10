@@ -1,30 +1,40 @@
-import java.util.ArrayList;
 
+	// make this a BlackJackPlayer which IS-A Player
 public class Player
 {
-	private int chips;
-	private ArrayList<Cards> playersHand = new ArrayList<Cards>(2);
+	// will add implementation to cash in/cash out next week
+	// for now player will start with default chips for testing
+	private int chips = 1000;
+	// Player HAS-A hand
+	private Hand hand = new Hand();
 	
 	public Player() {}
 	
-	public Player(int chips, ArrayList<Cards> hand)
+	public Player(int chips, Hand hand)
 	{
 		this.chips = chips;
-		playersHand = hand;
+		this.hand = hand;
 	}
 	
-	public void bet()
+	public Hand getHand()
 	{
-		
+		return hand;
 	}
 	
-	public void hit()
+	public int bet(int chips)
 	{
-		
+		this.chips -= chips;
+		return chips;
 	}
 	
-	public void stand()
+	public int getChips()
 	{
-		
+		return chips;
 	}
+	
+	public void payout(int value)
+	{
+		chips += value;
+	}
+	
 }

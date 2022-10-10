@@ -1,4 +1,5 @@
 import java.util.Random;
+
 import java.util.ArrayList;
 
 public class CardDeck extends Cards
@@ -29,7 +30,6 @@ public class CardDeck extends Cards
 	{
 		for (i = 0; i < 4; ++i)
 		{
-			// deck[j] = new Cards();
 			deck.add(j, new Cards());
 			deck.get(j).setSuit((Suits)suitArr[i]);
 			++j;
@@ -52,7 +52,7 @@ public class CardDeck extends Cards
 		return deck;
 	}
 	
-	public Cards getCard(int i)
+	public Cards get(int i)
 	{
 		return deck.get(i);
 	}
@@ -66,12 +66,60 @@ public class CardDeck extends Cards
 		for (int i = 0; i < x; i++)
 		{
 			int rd = random.nextInt(x);
-			//Cards temp = new Cards(cardDeck.deck[rd]);
-			//cardDeck.deck[rd] = cardDeck.deck[i];
-			//cardDeck.deck[i] = temp;
 			Cards temp = new Cards(cardDeck.deck.get(rd));
-			cardDeck.deck.set(rd, cardDeck.deck.get(i));
+			cardDeck.deck.get(rd).setCards(cardDeck.deck.get(i).getSuit(), cardDeck.deck.get(i).getRank());
 			cardDeck.deck.set(i, temp);
 		}
 	}
+	
+//	public int getValue(Cards card) 
+//	{
+//		int value = 0;
+//		Ranks cardRank = card.getRank();
+//		switch(cardRank)
+//		{
+//			case TEN,JACK,KING,QUEEN:
+//				value = 10;
+//				break;
+//				
+//			// how to make this 11 if hand is high
+//			// and 1 if hand is low?
+//			case ACE:
+//				value = 11;
+//				break;
+//				
+//			case TWO:
+//				value = 2;
+//				break;
+//				
+//			case THREE:
+//				value = 3;
+//				break;
+//				
+//			case FOUR:
+//				value = 4;
+//				break;
+//				
+//			case FIVE:
+//				value = 5;
+//				break;
+//				
+//			case SIX:
+//				value = 6;
+//				break;
+//				
+//			case SEVEN:
+//				value = 7;
+//				break;
+//				
+//			case EIGHT:
+//				value = 8;
+//				break;
+//				
+//			case NINE:
+//				value = 9;
+//				break;
+//		}
+//		return value;
+//	}
 }
