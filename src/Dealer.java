@@ -23,6 +23,11 @@ public class Dealer
 		this.hand = hand;
 	}
 	
+	public CardDeck getDeck()
+	{
+		return deck;
+	}
+	
 	public Hand getHand()
 	{
 		return hand;

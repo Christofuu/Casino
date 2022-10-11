@@ -4,13 +4,15 @@ import java.util.Scanner;
 public class Blackjack extends Game
 // Blackjack IS-A Game
 {
+	///// FIELDS /////
+	
     // Blackjack HAS-A dealer
     private static Dealer dealer = new Dealer();
     private static Player player = new Player();
     private static int pot;
     private static int selectPlay;
     private static Scanner userInput = new Scanner(System.in);
-  
+    private static boolean gameState;
     
 //    public static void selectPlay(String userMessage) 
 //    {
@@ -28,6 +30,8 @@ public class Blackjack extends Game
 //		}
 //    }
     
+    ///// MAIN METHODS /////
+    
     public static int getPlayerValue()
     {
     	return player.getHand().getHandValue(player.getHand().getHandCards());
@@ -38,40 +42,58 @@ public class Blackjack extends Game
     	return dealer.getHand().getHandValue(dealer.getHand().getHandCards());
     }
     
-    public static void checkPlayerValue(int value)
+    public static boolean checkPlayerValue(int value)
     {
+    	boolean exitState = true;
+    	
     	if (value == 21)
     	{
     		player.payout(pot);
     		pot = 0;
-    		System.out.println("You won! You now have " + player.getChips() + " chips."
-    				+ "\nPlay again? Enter 1 for yes, 2 for no");
+    		System.out.println("You won! You now have " + player.getChips() + " chips.");
+    		
+    		exitState = true;
     	}
     	if (value < 21)
     	{
     		System.out.println("You're at " + getPlayerValue());
+    		exitState = false;
     	}
     	
     	if (value > 21)
     	{
-    		System.out.println("Bust! House wins. You know have " + player.getChips() + " chips."
-    				+ "\nPlay again? Enter 1 for yes, 2 for no");
+    		System.out.println("Bust! House wins. You know have " + player.getChips() + " chips.");
+    		exitState = true;
     	}
+    	return exitState;
     }
     
-    public static void checkDealerValue(int value)
+    public static String playerHandToString()
     {
+    	return "Your hand: " + player.getHand().getHandCards().toString();
+    }
+    
+    public static String dealerHandToString()
+    {
+    	return "Dealers hand: " + dealer.getHand().getHandCards().toString();
+    }
+    
+    public static boolean checkDealerValue(int value)
+    {
+    	boolean exitState = true;
+    	
     	if (value == 21)
     	{
     		System.out.println("Blackjack for the house.");
     		pot = 0;
-    		System.out.println("House wins. You now have " + player.getChips() + " chips. "
-    				+ "\nPlay again? Enter 1 for yes, 2 for no");
+    		System.out.println("House wins. You now have " + player.getChips() + " chips. ");
+    		exitState = true;
     	}
     	
     	if (value > 21)
     	{
     		System.out.println("Dealer is at " + getDealerValue());
+    		exitState = false;
     	}
     	
     	if (value < 21)
@@ -79,9 +101,10 @@ public class Blackjack extends Game
     		System.out.println("House busts. You win!");
     		player.payout(pot);
     		pot = 0;
-    		System.out.println("You win! You now have " + player.getChips() + " chips. "
-    				+ "\nPlay again? Enter 1 for yes, 2 for no");
+    		System.out.println("You win! You now have " + player.getChips() + " chips. ");
+    		exitState = true;
     	}
+    	return exitState;
     }
     
     public static void playerHit() 
@@ -94,7 +117,32 @@ public class Blackjack extends Game
     	dealer.dealCard(dealer.getHand());
     }
     
+    ///// MAIN METHOD /////
+    
     public static void main(String args[])
+    {
+    	do
+    	{
+    		blackjack();
+    		System.out.println("Do you want to play again? \nEnter 1 for yes, 2 to return to the Casino.");
+    		selectPlay = userInput.nextInt();
+    		
+    		if (selectPlay == 1)
+    		{
+    			gameState = true;
+    		} else 
+    		{
+    			gameState = false;
+    			System.out.println("Returning to Casino. Thanks for Playing!");
+    			userInput.close();
+    		}
+    		
+    	} while (gameState);
+    }
+    
+    ///// GAME LOGIC /////
+    
+    public static void blackjack()
     {	
     	System.out.println("Welcome to Blackjack! Would you like to play? \nEnter 1 for yes, 2 to return to the Casino.");
     	
@@ -102,13 +150,13 @@ public class Blackjack extends Game
     	
     	if (selectPlay == 2)
     	{
-    		userInput.close();
     		return;
     	}
     	
-    	playAgain:
     	if (selectPlay == 1)
     	{
+    		dealer.getDeck().setDeck();
+    		dealer.getDeck().shuffleDeck(dealer.getDeck());
     		System.out.println("Perfect, lets begin! The house will match your bet. How much would you like to bet?"
     				+ "\nEnter a number between 2 and 500.");
     		
@@ -123,48 +171,30 @@ public class Blackjack extends Game
     			dealer.dealCard(dealer.getHand());
     		}
     		
-    		System.out.println("Your hand: " + player.getHand().getHandCards().toString());
-    		System.out.println("Dealers hand: " + dealer.getHand().getHandCards().toString());
+    		System.out.println(playerHandToString());
+    		System.out.println(dealerHandToString());
     		
     		// FIRST ROUND //
     		if (player.getHand().getHandValue(player.getHand().getHandCards()) == 21)
     		{
     			player.payout(pot * 2);
-    			System.out.println("Natural! You won " + (pot*2) + "chips. You now have " + player.getChips() + " chips."
-    					+ "\nPlay again? (Enter 1 for yes, 2 for no)");
+    			System.out.println("Natural! You won " + (pot*2) + "chips. You now have " + player.getChips() + " chips.");
     			pot = 0;
     			
-    			selectPlay = userInput.nextInt();
-    			if (selectPlay == 1)
-    			{
-    				break playAgain;
-    			}
-    			if (selectPlay == 2)
-    			{
-    				userInput.close();
-    				return;
-    			}
-    		
+    			return;
     		}
     		
     		if (dealer.getHand().getHandValue(dealer.getHand().getHandCards()) == 21)
     		{
     			pot = 0;
-    			System.out.println("House wins! Play again? (Enter 1 for yes, 2 for no)");
+    			System.out.println("House wins!");
     			
-    			selectPlay = userInput.nextInt();
-    			if (selectPlay == 1)
-    			{
-    				break playAgain;
-    			}
-    			if (selectPlay == 2)
-    			{
-    				userInput.close();
-    				return;
-    			}
+    			return;
     		}
     		
-    		// ROUND 2+ (will be same)//
+    		// ROUND 2+ (will loop until game is over)//
+    		
+    		 
     		
     		// USER BEHAVIOR //
     		System.out.println("You are at " + player.getHand().getHandValue(player.getHand().getHandCards()) 
@@ -175,7 +205,12 @@ public class Blackjack extends Game
     		{
     			System.out.println("You hit.");
     			playerHit();
-    			checkPlayerValue(getPlayerValue());
+    			System.out.println(playerHandToString());
+    			
+    			if (checkPlayerValue(getPlayerValue()) == true)
+    			{
+    				return;
+    			}
     		}
     		if (selectPlay == 2)
     		{
@@ -183,12 +218,18 @@ public class Blackjack extends Game
     		}
     		
     		// DEALER BEHAVIOR //
+    		System.out.println("Dealer is at " + dealer.getHand().getHandValue(dealer.getHand().getHandCards()));
     		if (getDealerValue() > 17)
     		{
     			// Dealer hits, show dealers card, then output if dealer busts, if not output where dealer is at
     			dealerHit();
     			System.out.println("Dealer hits.");
-    			checkDealerValue(getDealerValue());
+    			System.out.println(dealerHandToString());
+    			
+    			if (checkDealerValue(getDealerValue()) == true)
+    			{
+    				return;
+    			}
     		}
     		
     		if (getDealerValue() < 17)
@@ -197,7 +238,6 @@ public class Blackjack extends Game
     		}
     		
     	}
-    	userInput.close();
     }
     
 }
