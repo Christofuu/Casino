@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 
-
 public class Hand extends Cards
 {
 	private ArrayList<Cards> handCards = new ArrayList<Cards>();

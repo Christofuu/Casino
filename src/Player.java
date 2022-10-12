@@ -1,13 +1,15 @@
 
-	// make this a BlackJackPlayer which IS-A Player
+	// TODO  make this a BlackJackPlayer which IS-A Player
 public class Player
 {
-	// will add implementation to cash in/cash out next week
+	///// FIELDS /////
+	// TODO add implementation for chips I/O
 	// for now player will start with default chips for testing
 	private int chips = 1000;
 	// Player HAS-A hand
 	private Hand hand = new Hand();
 	
+	///// CONSTRUCTORS /////
 	public Player() {}
 	
 	public Player(int chips, Hand hand)
@@ -16,6 +18,8 @@ public class Player
 		this.hand = hand;
 	}
 	
+	///// METHODS /////
+	// TODO write method headers
 	public Hand getHand()
 	{
 		return hand;

@@ -1,4 +1,5 @@
 public class Cards {
+	///// FIELDS /////
     // Cards have a suit
     protected enum Suits {
         DIAMOND,
@@ -26,6 +27,7 @@ public class Cards {
     private Suits suit;
     private Ranks rank;
     
+    ///// CONSTRUCTORS /////
     public Cards() {}
     
     public Cards(Suits suit, Ranks rank)
@@ -40,6 +42,8 @@ public class Cards {
     	this.rank = card.getRank();
     }
     
+    ///// METHODS /////
+    // TODO write method headers
     public Cards getCards(Cards card)
     {
     	return card;

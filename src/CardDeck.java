@@ -2,24 +2,29 @@ import java.util.Random;
 
 import java.util.ArrayList;
 
-public class CardDeck extends Cards
 	// A card deck IS-many cards
+public class CardDeck extends Cards
 {  
-	// private final int deckSize = 52;
+	///// FIELDS /////
 	private ArrayList<Cards> deck =  new ArrayList<Cards>();
-	// Might have to make this an array list
-	// It being resizable would be useful for
-	// dealing out cards w.o replacement
 	private Ranks rankArr[] = Ranks.values();
 	private Suits suitArr[] = Suits.values();				
 	
+	///// CONSTRUCTORS /////
 	public CardDeck() 
 	{
 		// Constructor creates an array of cards with each possible card
 		// in a typical 52 card deck
 	}
 	
-	
+	///// METHODS /////
+	// TODO write method headers
+	/*
+	 * initializes deck as a typical 52 card deck
+	 * i counts 13 cards of each rank, 4 times
+	 * k counts 4 suits, 13 times
+	 * j counts 52 cards in the deck
+	 */
 	public void setDeck()
 	{
 	int i = 0;
@@ -71,55 +76,4 @@ public class CardDeck extends Cards
 			cardDeck.deck.set(i, temp);
 		}
 	}
-	
-//	public int getValue(Cards card) 
-//	{
-//		int value = 0;
-//		Ranks cardRank = card.getRank();
-//		switch(cardRank)
-//		{
-//			case TEN,JACK,KING,QUEEN:
-//				value = 10;
-//				break;
-//				
-//			// how to make this 11 if hand is high
-//			// and 1 if hand is low?
-//			case ACE:
-//				value = 11;
-//				break;
-//				
-//			case TWO:
-//				value = 2;
-//				break;
-//				
-//			case THREE:
-//				value = 3;
-//				break;
-//				
-//			case FOUR:
-//				value = 4;
-//				break;
-//				
-//			case FIVE:
-//				value = 5;
-//				break;
-//				
-//			case SIX:
-//				value = 6;
-//				break;
-//				
-//			case SEVEN:
-//				value = 7;
-//				break;
-//				
-//			case EIGHT:
-//				value = 8;
-//				break;
-//				
-//			case NINE:
-//				value = 9;
-//				break;
-//		}
-//		return value;
-//	}
 }

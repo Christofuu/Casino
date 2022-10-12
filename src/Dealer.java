@@ -8,7 +8,7 @@ public class Dealer
 	// Dealer HAS a hand in the game;
 	private Hand hand = new Hand();
 	
-	// CONSTRUCTORS //
+	///// CONSTRUCTORS /////
 	public Dealer() 
 	{
 		deck.setDeck();
@@ -23,6 +23,8 @@ public class Dealer
 		this.hand = hand;
 	}
 	
+	///// METHODS /////
+	// TODO write all method headers //
 	public CardDeck getDeck()
 	{
 		return deck;
@@ -33,7 +35,6 @@ public class Dealer
 		return hand;
 	}
 	
-	// METHODS //
 	/*
 	 * @param hand
 	 * Gives card from top of dealers deck
