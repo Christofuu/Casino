@@ -42,31 +42,31 @@ public class Blackjack extends Game
     	return dealer.getHand().getHandValue(dealer.getHand().getHandCards());
     }
     
-    public static boolean checkPlayerValue(int value)
-    {
-    	boolean exitState = true;
-    	
-    	if (value == 21)
-    	{
-    		player.payout(pot);
-    		pot = 0;
-    		System.out.println("You won! You now have " + player.getChips() + " chips.");
-    		
-    		exitState = true;
-    	}
-    	if (value < 21)
-    	{
-    		System.out.println("You're at " + getPlayerValue());
-    		exitState = false;
-    	}
-    	
-    	if (value > 21)
-    	{
-    		System.out.println("Bust! House wins. You know have " + player.getChips() + " chips.");
-    		exitState = true;
-    	}
-    	return exitState;
-    }
+//    public static boolean checkPlayerValue(int value)
+//    {
+//    	boolean exitState = true;
+//    	
+//    	if (value == 21)
+//    	{
+//    		player.payout(pot);
+//    		pot = 0;
+//    		System.out.println("You won! You now have " + player.getChips() + " chips.");
+//    		
+//    		exitState = true;
+//    	}
+//    	if (value < 21)
+//    	{
+//    		System.out.println("You're at " + getPlayerValue());
+//    		exitState = false;
+//    	}
+//    	
+//    	if (value > 21)
+//    	{
+//    		System.out.println("Bust! House wins. You know have " + player.getChips() + " chips.");
+//    		exitState = true;
+//    	}
+//    	return exitState;
+//    }
     
     public static String playerHandToString()
     {
@@ -78,33 +78,100 @@ public class Blackjack extends Game
     	return "Dealers hand: " + dealer.getHand().getHandCards().toString();
     }
     
-    public static boolean checkDealerValue(int value)
-    {
-    	boolean exitState = true;
+//    public static boolean checkDealerValue(int value)
+//    {
+//    	boolean exitState = true;
+//    	
+//    	if (value == 21)
+//    	{
+//    		System.out.println("Blackjack for the house.");
+//    		pot = 0;
+//    		System.out.println("House wins. You now have " + player.getChips() + " chips. ");
+//    		exitState = true;
+//    	}
+//    	
+//    	if (value > 21)
+//    	{
+//    		System.out.println("Dealer is at " + getDealerValue());
+//    		exitState = false;
+//    	}
+//    	
+//    	if (value < 21)
+//    	{
+//    		System.out.println("House busts. You win!");
+//    		player.payout(pot);
+//    		pot = 0;
+//    		System.out.println("You win! You now have " + player.getChips() + " chips. ");
+//    		exitState = true;
+//    	}
+//    	return exitState;
+//    }
+    
+    /*
+     * Checks type of win condition for the blackjack game
+     * types of win conditions:
+     * case a:user wins with blackjack
+     * case b:user wins with dealer bust
+     * case c:user wins where 17 < dealerCount < 21 && dealerCount < userCount < 21
+     * case d:dealer wins with blackjack
+     * case e:dealer wins with user bust
+     * case f:no win condition (dealer under 17)
+     * case g:no win condition (playerCount < dealer < 21
+     * 
+     */
+    public static void checkWin()
+    {			
+    	int playerCount = getPlayerValue();
+    	int dealerCount = getDealerValue();
     	
-    	if (value == 21)
-    	{
-    		System.out.println("Blackjack for the house.");
-    		pot = 0;
-    		System.out.println("House wins. You now have " + player.getChips() + " chips. ");
-    		exitState = true;
-    	}
+    		// TODO make sure order is correct on these
+    		// this could probably be a void switch statement? 
+    		// all I want to return are side effects not actual return types
     	
-    	if (value > 21)
-    	{
-    		System.out.println("Dealer is at " + getDealerValue());
-    		exitState = false;
-    	}
-    	
-    	if (value < 21)
-    	{
-    		System.out.println("House busts. You win!");
-    		player.payout(pot);
-    		pot = 0;
-    		System.out.println("You win! You now have " + player.getChips() + " chips. ");
-    		exitState = true;
-    	}
-    	return exitState;
+    		// case a: user wins with blackjack
+			if (playerCount == 21)
+			{
+				player.payout(pot);
+				System.out.println("Blackjack! You won " + pot + " chips and now have " + player.getChips() + " chips!");
+				pot = 0;
+			}
+			// case b: user wins with dealer bust
+			if (dealerCount > 21)
+			{
+				player.payout(pot);
+				System.out.println("Dealer busts! You won " + pot + " chips and now have " + player.getChips() + " chips!");
+			}
+    		// case c: user wins where 17 < dealerCount < 21 && dealerCount < userCount < 21
+			if ((17 < dealerCount && dealerCount < 21) && (dealerCount < playerCount && playerCount < 21))
+			{
+				player.payout(pot);
+				System.out.println("You win (dealer can't hit past 17)! You won " 
+									+ pot + " chips and now have " + player.getChips() + " chips!");
+			}
+			// case d: dealer wins with blackjack
+			if (dealerCount == 21)
+			{
+				pot = 0;
+				System.out.println("Dealer blackjack! You have " + player.getChips() + " left.");
+			}
+			// case e: dealer wins with user bus
+			if (playerCount > 21)
+			{
+				pot = 0;
+				System.out.println("Bust! You have " + player.getChips() + " left");
+			}
+			// TODO case f & g, figure out how to make this restart the round 2+ gameplay cycle
+			// case f: no win condition (dealer under 17, no player blackjack)
+			if ((dealerCount < 17) && (17 < playerCount) && (playerCount < 21))
+			{
+				return;
+			}
+			// case g: no win condition (playerCount < dealerCount < 21)
+			if ((playerCount < dealerCount) && (dealerCount < 21))
+			{
+				return;
+			}
+
     }
     
     public static void playerHit() 
@@ -192,8 +259,18 @@ public class Blackjack extends Game
     			return;
     		}
     		
+    		// TODO Finish Round 2+ gameplay cycle
+    		// TODO Round 2+ loop, 
+    		// maybe make checkWin() return boolean to assign to a do while condition
+    		// checkWin() will return false when either player or dealer wins, do while loop will execute while true
+    		// TODO test checkWin() method
+    		
     		// ROUND 2+ (will loop until game is over)//
     		
+    		// I.) Player hits or stands first
+    		// II.) checkWin()
+    		// III.) Dealer hits or stands
+    		// IV.) checkWin()
     		 
     		
     		// USER BEHAVIOR //
@@ -207,10 +284,7 @@ public class Blackjack extends Game
     			playerHit();
     			System.out.println(playerHandToString());
     			
-    			if (checkPlayerValue(getPlayerValue()) == true)
-    			{
-    				return;
-    			}
+    			checkWin();
     		}
     		if (selectPlay == 2)
     		{
@@ -226,10 +300,7 @@ public class Blackjack extends Game
     			System.out.println("Dealer hits.");
     			System.out.println(dealerHandToString());
     			
-    			if (checkDealerValue(getDealerValue()) == true)
-    			{
-    				return;
-    			}
+    			checkWin();
     		}
     		
     		if (getDealerValue() < 17)
