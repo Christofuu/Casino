@@ -1,5 +1,6 @@
 public class Cards {
 	///// FIELDS /////
+	
     // Cards have a suit
     protected enum Suits {
         DIAMOND,
@@ -8,6 +9,7 @@ public class Cards {
         CLUB
     }
     
+    // Cards have a rank
     protected enum Ranks {
     	TWO,
     	THREE,
@@ -43,38 +45,66 @@ public class Cards {
     }
     
     ///// METHODS /////
-    // TODO write method headers
+    
+    /**
+     *  gets a card
+     * @param Cards card
+     * @return card
+     */
     public Cards getCards(Cards card)
     {
     	return card;
     }
     
+    /**
+     * sets a card's suit and rank
+     * @param Suits suit, Ranks rank
+     * @return void
+     */
     public void setCards(Suits suit, Ranks rank)
     {
     	this.suit = suit;
     	this.rank = rank;
     }
 
+    /**
+     * @return suit
+     */
 	public Suits getSuit()
 	{
 		return suit;
 	}
 
+	/**
+	 * @param Suits suit
+	 * @return void
+	 */
 	public void setSuit(Suits suit)
 	{
 		this.suit = suit;
 	}
 
+	/**
+	 * @return rank
+	 */
 	public Ranks getRank()
 	{
 		return rank;
 	}
 
+	/**
+	 * @param rank
+	 * @return void
+	 */
 	public void setRank(Ranks rank)
 	{
 		this.rank = rank;
 	}
 
+	/**
+	 * returns unicode suit of card
+	 * @return String
+	 */
 	@Override public String toString()
 	{
 		String returnString = new String();

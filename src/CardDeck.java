@@ -18,12 +18,15 @@ public class CardDeck extends Cards
 	}
 	
 	///// METHODS /////
-	// TODO write method headers
-	/*
-	 * initializes deck as a typical 52 card deck
-	 * i counts 13 cards of each rank, 4 times
-	 * k counts 4 suits, 13 times
-	 * j counts 52 cards in the deck
+	/**
+	 * 
+	 * initializes deck as a typical 52 card deck.
+	 * i counts 13 cards of each rank, 4 times.
+	 * k counts 4 suits, 13 times.
+	 * j counts 52 cards in the deck.
+	 * O(n) complexity since j increments inside the nested loop (I think).
+	 * 
+	 * @return void
 	 */
 	public void setDeck()
 	{
@@ -52,25 +55,44 @@ public class CardDeck extends Cards
 	}
 	}
 	
+	/**
+	 * gets deck from CardDeck
+	 * @return deck
+	 */
 	public ArrayList<Cards> getCardDeck()
 	{
 		return deck;
 	}
 	
+	/**
+	 * gets a card from deck at a specified index
+	 * @param int i
+	 * @return deck.get(i)
+	 */
 	public Cards get(int i)
 	{
 		return deck.get(i);
 	}
 	
+	/**
+	 * shuffles a 52 card deck
+	 * @param CardDeck cardDeck
+	 * @return void
+	 */
 	public void shuffleDeck(CardDeck cardDeck)
 	{
+		// cards in blackjack deck
 		int x = 52;
 		
+		// random object for number gen
 		Random random = new Random();
 		
 		for (int i = 0; i < x; i++)
 		{
+			// generates random number [0, 52)
 			int rd = random.nextInt(x);
+			
+			// generic swap method but with randomly picked card
 			Cards temp = new Cards(cardDeck.deck.get(rd));
 			cardDeck.deck.get(rd).setCards(cardDeck.deck.get(i).getSuit(), cardDeck.deck.get(i).getRank());
 			cardDeck.deck.set(i, temp);

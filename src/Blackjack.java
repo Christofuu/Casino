@@ -1,6 +1,9 @@
 import java.util.Scanner;
 //import java.io.*;
 
+// TODO Add username search which tracks chips over multiple sessions using I/O
+// TODO Make player a BlackjackPlayer, player will be parent class for slots and blackjack
+// TODO Update UML, Make week 1 video
 public class Blackjack extends Game
 // Blackjack IS-A Game
 {
@@ -8,80 +11,64 @@ public class Blackjack extends Game
 	
     // Blackjack HAS-A dealer
     private static Dealer dealer = new Dealer();
+    // Blackjack HAS-A player
     private static Player player = new Player();
+    // Blackjack HAS-A pot
     private static int pot;
+    // selectPlay dictates initially if the user plays, 
+    // and if the user keeps playing after each game ends
     private static int selectPlay;
+    // Blackjack HAS user input
     private static Scanner userInput = new Scanner(System.in);
+    // true when no win conditions have been met, else false
+    // blackjack method will execute while gameState == true
     private static boolean gameState = true;
+    // false when user chooses to play/keeps playing blackjack
+    // true when user quits, when true program exits
     private static boolean exitState;
-    
-//    public static void selectPlay(String userMessage) 
-//    {
-//    	System.out.println(userMessage);
-//    	
-//    	selectPlay = userInput.nextInt();
-//		if (selectPlay == 1)
-//		{
-//			;
-//		}
-//		if (selectPlay == 2)
-//		{
-//			userInput.close();
-//			return;
-//		}
-//    }
     
     ///// MAIN METHODS /////
     
+    /**
+     * gets count of players hand
+     * @return int
+     */
     public static int getPlayerValue()
     {
     	return player.getHand().getHandValue(player.getHand().getHandCards());
     }
     
+    /**
+     * gets count of dealers hand
+     * @return int
+     */
     public static int getDealerValue()
     {
     	return dealer.getHand().getHandValue(dealer.getHand().getHandCards());
     }
     
-//    public static boolean checkPlayerValue(int value)
-//    {
-//    	boolean exitState = true;
-//    	
-//    	if (value == 21)
-//    	{
-//    		player.payout(pot);
-//    		pot = 0;
-//    		System.out.println("You won! You now have " + player.getChips() + " chips.");
-//    		
-//    		exitState = true;
-//    	}
-//    	if (value < 21)
-//    	{
-//    		System.out.println("You're at " + getPlayerValue());
-//    		exitState = false;
-//    	}
-//    	
-//    	if (value > 21)
-//    	{
-//    		System.out.println("Bust! House wins. You know have " + player.getChips() + " chips.");
-//    		exitState = true;
-//    	}
-//    	return exitState;
-//    }
-    
+    /**
+     *  
+     * @return String
+     */
     public static String playerHandToString()
     {
     	return "Your hand: " + player.getHand().getHandCards().toString();
     }
     
+    /**
+     * 
+     * @return String
+     */
     public static String dealerHandToString()
     {
     	return "Dealers hand: " + dealer.getHand().getHandCards().toString();
     }
     
-    /*
-     * Checks type of win condition for the blackjack game
+    /**
      * 
+     * Checks type of win condition for the blackjack game
+     * used to determine game state based on if true or false was returned
      * @param
      * @return boolean
      * 
@@ -92,16 +79,11 @@ public class Blackjack extends Game
     	int playerCount = getPlayerValue();
     	int dealerCount = getDealerValue();
     	
-    		// TODO make sure order is correct on these
-    		// this could probably be a void switch statement? 
-    		// all I want to return are side effects not actual return types
-    	
     		// case a: user wins with blackjack
 			if (playerCount == 21)
 			{
 				player.payout(pot);
 				System.out.println("Blackjack! You won " + pot + " chips and now have " + player.getChips() + " chips!");
-				pot = 0;
 			}
 			// case b: user wins with dealer bust
 			else if (dealerCount > 21)
@@ -119,37 +101,33 @@ public class Blackjack extends Game
 			// case d: dealer wins with blackjack
 			else if (dealerCount == 21)
 			{
-				pot = 0;
 				System.out.println("Dealer blackjack! You have " + player.getChips() + " left.");
 			}
 			// case e: dealer wins with user bus
 			else if (playerCount > 21)
 			{
-				pot = 0;
 				System.out.println("Bust! You have " + player.getChips() + " left");
 			}
-			// TODO case f & g, figure out how to make this restart the round 2+ gameplay cycle
 			// case f: no win condition (dealer under 17, no player blackjack)
-//			else if ((dealerCount < 17) && (17 < playerCount) && (playerCount < 21))
-//			{
-//				gameState = true;
-//			}
-//			// case g: no win condition (playerCount < dealerCount < 21)
-//			else if ((playerCount < dealerCount) && (dealerCount < 21))
-//			{
-//				gameState = true;
-//			}
 			// if the game is not cases a-e, then it's either f or g, which both return true
 			else win = false;
 			
 			return win;
     }
     
+    /**
+     * deals a card to the player's hand
+     * @return void
+     */
     public static void playerHit() 
     {
     	dealer.dealCard(player.getHand());
     }
     
+    /**
+     * deals a card to dealer's hand
+     * @return void
+     */
     public static void dealerHit()
     {
     	dealer.dealCard(dealer.getHand());
@@ -157,6 +135,14 @@ public class Blackjack extends Game
     
     ///// MAIN METHOD /////
     
+    // TODO Make this exit to Casino main menu
+    
+    /**
+     * 
+     * loops blackjack method based on user input before the first game cycle and after each following
+     * user enters 1, game executes
+     * user enters 2, program exits (eventually to casino main menu)
+     */
     public static void main(String args[])
     {
     	do
@@ -191,19 +177,35 @@ public class Blackjack extends Game
     		return;
     	}
     	
+    	// input of 1 initializes game
     	if (selectPlay == 1)
     	{
+    		// Resets any prior game conditions
+    		pot = 0;
     		player.getHand().getHandCards().clear();
     		dealer.getHand().getHandCards().clear();
     		dealer.getDeck().setDeck();
     		dealer.getDeck().shuffleDeck(dealer.getDeck());
     		
-    		// TODO Exception handling: Catch when player bets more than 500 OR more than they currently have
     		System.out.println("Perfect, lets begin! You have " + player.getChips() 
     				+ " chips. The house will match your bet. How much would you like to bet?"
     				+ "\nEnter a number between 2 and 500.");
     		
-    		pot = 2 * player.bet(userInput.nextInt());
+    		int bet = 0;
+    		bet = userInput.nextInt();
+    		
+    		// it'd be nice if these two if statements could jump back up to entering a bet if they catch the error
+    		if ((bet < 2) || (500 < bet))
+    		{
+    			throw new ArithmeticException("Please enter a value between 2 and 500");
+    		}
+    		
+    		if (player.getChips() < bet)
+    		{
+    			throw new ArithmeticException("Not enough chips! Please enter a value between 2 and " + player.getChips() + ".");
+    		}
+    		
+    		pot = 2 * player.bet(bet);
     		
     		System.out.println("You bet: " + (pot / 2) + " chips and have: " + player.getChips() + " chips remaining. "
     				+ "\nThe pot is: " + pot + "\nLet's begin.");
@@ -218,7 +220,12 @@ public class Blackjack extends Game
     		System.out.println(dealerHandToString());
     		
     		// FIRST ROUND //
-    		if (player.getHand().getHandValue(player.getHand().getHandCards()) == 21)
+    		
+    		// I.) Check for player blackjack
+    		// if true, then payout double, player wins
+    		// II.) Check for dealer blackjack
+    		// if true then dealer wins
+    		if (getPlayerValue() == 21)
     		{
     			player.payout(pot * 2);
     			System.out.println("Natural! You won " + (pot*2) + " chips. You now have " + player.getChips() + " chips.");
@@ -227,17 +234,14 @@ public class Blackjack extends Game
     			return;
     		}
     		
-    		if (dealer.getHand().getHandValue(dealer.getHand().getHandCards()) == 21)
+    		if (getDealerValue() == 21)
     		{
     			pot = 0;
     			System.out.println("House wins! You have " + player.getChips() + " chips.");
     			
     			return;
     		}
-    		
-    		// TODO Finish Round 2+ gameplay cycle
-    		// TODO Round 2+ loop, 
-    		
+    		 
     		// ROUND 2+ (will loop until game is over)//
     		
     		// I.) Player hits or stands first
@@ -248,8 +252,7 @@ public class Blackjack extends Game
     		do
     		{
     		// USER BEHAVIOR //
-    		System.out.println("You are at " + player.getHand().getHandValue(player.getHand().getHandCards()) 
-    				+ ". Enter 1 to hit, 2 to stand.");
+    		System.out.println("You are at " + getPlayerValue() + ". Enter 1 to hit, 2 to stand.");
     		
     		selectPlay = userInput.nextInt();
     		if (selectPlay == 1)
@@ -257,10 +260,11 @@ public class Blackjack extends Game
     			System.out.println("You hit.");
     			playerHit();
     			System.out.println(playerHandToString());
+    			System.out.println("You are at " + getPlayerValue() + ".");
     			
     			gameState = !checkWin();
     		}
-    		// TODO Standing sometimes ends the game with no explanation. Figure out why, fix issue
+    		// FIXED(?) Standing sometimes ends the game with no explanation. Figure out why, fix issue
     		if (selectPlay == 2)
     		{
     			System.out.println("You stand.");
@@ -269,7 +273,10 @@ public class Blackjack extends Game
     		// DEALER BEHAVIOR //
     		if (gameState == true)
     		{
-    		System.out.println("Dealer is at " + dealer.getHand().getHandValue(dealer.getHand().getHandCards()));
+    				
+    		System.out.println("Dealer is at " + dealer.getHand().getHandValue(dealer.getHand().getHandCards()) + ".");
+    		
+    		// Dealer will always hit under 17
     		if (getDealerValue() < 17)
     		{
     			// Dealer hits, show dealers card, then output if dealer busts, if not output where dealer is at
@@ -277,16 +284,19 @@ public class Blackjack extends Game
     			System.out.println("Dealer hits.");
     			System.out.println(dealerHandToString());
     			
+    			// if player didn't win (checkWin() == false) then gameState is true (game is still going) and vice versa
     			gameState = !checkWin();
     		}
     		
-    		if (getDealerValue() > 17)
+    		// Dealer will always stand over 17
+    		else if (getDealerValue() > 17)
     		{
     			System.out.println("Dealer stands.");
     		}
+    		
     		}
+    		
     		} while (gameState);
     	}
-    }
-    
+    }  
 }

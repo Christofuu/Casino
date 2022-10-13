@@ -24,18 +24,26 @@ public class Dealer
 	}
 	
 	///// METHODS /////
-	// TODO write all method headers //
+	
+	/**
+	 * 
+	 * @return deck
+	 */
 	public CardDeck getDeck()
 	{
 		return deck;
 	}
-	
+	/**
+	 * 
+	 * @return hand
+	 */
 	public Hand getHand()
 	{
 		return hand;
 	}
 	
-	/*
+	/**
+	 * 
 	 * @param hand
 	 * Gives card from top of dealers deck
 	 * Removes card from deck
