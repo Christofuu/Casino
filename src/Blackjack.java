@@ -40,7 +40,7 @@ public class Blackjack extends Game
 	// Blackjack HAS-A dealer
 	private static Dealer dealer = new Dealer();
 	// Blackjack HAS-A player
-	private static Player player = new Player();
+	private static BlackjackPlayer player = new BlackjackPlayer();
 	// Blackjack HAS-A pot
 	private static int pot;
 	// selectPlay dictates initially if the user plays,

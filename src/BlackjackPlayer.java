@@ -25,7 +25,7 @@
  */
 
 // TODO make this a BlackJackPlayer which IS-A Player
-public class Player
+public class BlackjackPlayer
 {
 	///// FIELDS /////
 	// TODO add implementation for chips I/O
@@ -35,11 +35,11 @@ public class Player
 	private Hand hand = new Hand();
 
 	///// CONSTRUCTORS /////
-	public Player()
+	public BlackjackPlayer()
 	{
 	}
 
-	public Player(int chips, Hand hand)
+	public BlackjackPlayer(int chips, Hand hand)
 	{
 		this.chips = chips;
 		this.hand = hand;
