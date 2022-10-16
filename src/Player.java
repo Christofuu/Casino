@@ -71,6 +71,11 @@ public class Player
 		return chips;
 	}
 
+	public void setChips(int chips)
+	{
+		this.chips = chips;
+	}
+	
 	/**
 	 * gives player specified amount of chips
 	 * 

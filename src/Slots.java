@@ -8,12 +8,11 @@ public class Slots
 	private static int playCoin;
 	private static int userSelect;
 
-	private static int totalUserchip;
 	private static boolean gameState;
 
 	private static Scanner userInput = new Scanner(System.in);
 
-	private static SlotPlayer slotplayer = new SlotPlayer();
+	private static Player slotplayer = Casino.getPlayer();
 
 	public static void slotMachine() {
 
@@ -23,10 +22,11 @@ public class Slots
 
 			System.out.println("How much coin do you want to play?");
 
-			totalUserchip = slotplayer.getChips();
+			//TODO catch if player bets more than they have in chips or a negative number
+			slotplayer.getChips();
 			playCoin = userInput.nextInt();
 
-			totalUserchip = slotplayer.bet(playCoin);
+			slotplayer.bet(playCoin);
 			slotMachine.slotCompute();
 
 			if (slotMachine.getWinOrLose() == true) {
@@ -47,7 +47,6 @@ public class Slots
 
 		}
 		if (userSelect == 2) {
-			totalUserchip = slotplayer.getChips();
 			return;
 		}
 
@@ -68,7 +67,6 @@ public class Slots
 				gameState = false;
 				System.out.println("Returning to Casino. Thanks for Playing!");
 				//slotplayer.setChips() //probably set userTotal chip into saving file by user.
-				userInput.close();
 			}
 
 		} while (gameState);

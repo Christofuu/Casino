@@ -1,18 +1,40 @@
 import java.util.Scanner;
+import java.io.IOException;
+import java.io.File;
+import java.io.FileWriter;
 
 public class Casino
 {
 	private static Player player = new Player();
-//	private static Blackjack blackjack = new Blackjack();
+	private static String userName;
 	private static int optionSelect;
 	private static boolean gameState = true;
 	private static Scanner userInput = new Scanner(System.in);
-	// private Slots slots = new Slots();
+	private static File leaderboard = new File("leaderboard.txt");
 	
 	//TODO add cash in/out
-	//TODO add leaderboard
+	//TODO add leaderboard has to sort by chips earned 
 	//TODO add statistics
 	
+
+	public static void setUserData(String username, int chips, int money)
+	{
+		/* CMD
+		 * 1000 chips
+		 * 10 dollars
+		 *
+		 */
+		try {
+		FileWriter myWriter = new FileWriter("leaderboard.txt");
+		myWriter.write(username + "\n" + chips + "\n" + money);
+		myWriter.close();
+		} catch(IOException e) {
+			System.out.println("An error occurred");
+			e.printStackTrace();
+		}
+		
+	}
+
 	public static Player getPlayer()
 	{
 		return player;
@@ -66,7 +88,7 @@ public class Casino
 						break;
 						
 					case 2:
-						System.out.println("Adding slots implementation later");
+						Slots.main(args);
 						break;
 						
 					case 3:
@@ -83,6 +105,9 @@ public class Casino
 				break;
 				
 			case 5:
+				System.out.println("Enter your username (3 chars max, letters only)");
+				userName = userInput.next();
+				setUserData(userName, player.getChips(), player.getMoney());
 				System.out.println("Thanks for playing!");
 				userInput.close();
 				gameState = false;
