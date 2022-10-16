@@ -126,12 +126,12 @@
     <id>Relation</id>
     <coordinates>
       <x>335</x>
-      <y>415</y>
-      <w>75</w>
-      <h>65</h>
+      <y>370</y>
+      <w>80</w>
+      <h>60</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;130.0;110.0</additional_attributes>
+    <additional_attributes>10.0;100.0;140.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
@@ -217,7 +217,7 @@
       <x>405</x>
       <y>225</y>
       <w>105</w>
-      <h>35</h>
+      <h>25</h>
     </coordinates>
     <panel_attributes>_Class: BlackjackPlayer
 --
@@ -289,7 +289,7 @@
     <coordinates>
       <x>405</x>
       <y>310</y>
-      <w>105</w>
+      <w>150</w>
       <h>65</h>
     </coordinates>
     <panel_attributes>_Class: Hand_
@@ -308,12 +308,12 @@ handCards: ArrayList&lt;Cards&gt;
     <id>Relation</id>
     <coordinates>
       <x>445</x>
-      <y>255</y>
+      <y>245</y>
       <w>15</w>
-      <h>65</h>
+      <h>75</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;110.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;130.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>

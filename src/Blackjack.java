@@ -29,18 +29,15 @@ import java.util.Scanner;
  */
 
 // TODO Add username search which tracks chips over multiple sessions using I/O
-// TODO Make player a BlackjackPlayer, player will be parent class for slots and
-// blackjack
-// TODO Update UML, Make week 1 video
-public class Blackjack extends Game
-// Blackjack IS-A Game
+// TODO Make the player the same player across casino, blackjack, and slots
+public class Blackjack
 {
 	///// FIELDS /////
 
 	// Blackjack HAS-A dealer
 	private static Dealer dealer = new Dealer();
 	// Blackjack HAS-A player
-	private static BlackjackPlayer player = new BlackjackPlayer();
+	private static Player player = Casino.getPlayer();
 	// Blackjack HAS-A pot
 	private static int pot;
 	// selectPlay dictates initially if the user plays,
@@ -55,6 +52,10 @@ public class Blackjack extends Game
 	// true when user quits, when true program exits
 	private static boolean exitState;
 
+	public Blackjack()
+	{
+	}
+	
 	///// METHODS /////
 
 	/**
@@ -175,8 +176,6 @@ public class Blackjack extends Game
 
 	///// MAIN METHOD /////
 
-	// TODO Make this exit to Casino main menu
-
 	/**
 	 * 
 	 * loops blackjack method based on user input before the first game cycle
@@ -200,8 +199,7 @@ public class Blackjack extends Game
 			else
 			{
 				exitState = false;
-				System.out.println("Returning to Casino. Thanks for Playing!");
-				userInput.close();
+				System.out.println("Returning to Casino. Thanks for playing!");
 			}
 
 		} while (exitState);
@@ -211,6 +209,11 @@ public class Blackjack extends Game
 
 	public static void blackjack()
 	{
+		if (player.getChips() < 2)
+		{
+			System.out.println("Not enough chips! Returning to casino.");
+			return;
+		}
 		System.out.println(
 				"Welcome to Blackjack! Would you like to play? \nEnter 1 for yes, 2 to return to the Casino.");
 
