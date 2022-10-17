@@ -1,6 +1,9 @@
 
 public class Player
 {
+
+	private String id;
+	private String password;
 	private String username;
 	private int money = 1000;
 	private int chips = 0;
@@ -10,11 +13,34 @@ public class Player
 	{
 	}
 	
-	Player(String username, int money, int chips)
+	Player(String username, int money, int chips, String id, String password, String userName)
 	{
 		this.username = username;
 		this.money = money;
 		this.chips = chips;
+		this.id = id;
+		this.password = password;
+		this.username = userName;
+	}
+	
+	Player(String id, String password, String userName)
+	{
+		this.id = id;
+		this.password = password;
+		this.username = userName;
+	}
+
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
 	}
 	
 	public String getUsername()
