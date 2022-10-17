@@ -1,11 +1,10 @@
 import java.util.Scanner;
-// import java.io.*;
 
 /**
  * Lead Author(s):
  * 
  * @author Christopher Dove
- * @author
+ * @author Jo Kim
  *         <<add additional lead authors here, with a full first and last name>>
  * 
  *         Other contributors:
@@ -20,16 +19,14 @@ import java.util.Scanner;
  * 
  *         <<add more references here>>
  * 
- *         Version/date: 10/14/2022
+ *         Version/date: 10/17/2022
  * 
  *         Responsibilities of class: To define and implement methods of the
  *         blackjack game
- *         child class of Game
  * 
  */
 
 // TODO Add username search which tracks chips over multiple sessions using I/O
-// TODO Make the player the same player across casino, blackjack, and slots
 public class Blackjack
 {
 	///// FIELDS /////
@@ -40,6 +37,7 @@ public class Blackjack
 	private static Player player = Casino.getPlayer();
 	// Blackjack HAS-A pot
 	private static int pot;
+	private static int bet = 0;
 	// selectPlay dictates initially if the user plays,
 	// and if the user keeps playing after each game ends
 	private static int selectPlay;
@@ -127,7 +125,7 @@ public class Blackjack
 		}
 		// case c: user wins where 17 < dealerCount < 21 && dealerCount <
 		// userCount < 21
-		else if ((17 < dealerCount) && (dealerCount < 21)
+		else if ((17 <= dealerCount) && (dealerCount < 21)
 				&& (dealerCount < playerCount) && (playerCount < 21))
 		{
 			player.payout(pot);
@@ -174,6 +172,32 @@ public class Blackjack
 		dealer.dealCard(dealer.getHand());
 	}
 
+	public static void checkBet()
+	{
+		boolean validBet = false;
+		
+		do
+		{
+		System.out.println("The house will match your bet. How much would you like to bet?"
+					+ "\nEnter a number between 2 and 500.");
+			
+		bet = userInput.nextInt();
+		
+		if ((bet < 2) || (500 < bet))
+		{
+			System.out.println(
+					"Please enter a value between 2 and 500");
+		}
+		else if (player.getChips() < bet)
+		{
+			System.out.println(
+					"Not enough chips! Please enter a value between 2 and "
+							+ player.getChips() + ".");
+		}
+		else validBet = true;
+		
+		} while(validBet == false);
+	}
 	///// MAIN METHOD /////
 
 	/**
@@ -207,6 +231,13 @@ public class Blackjack
 
 	///// GAME LOGIC /////
 
+	/**
+	 * game logic for blackjack
+	 * user can bet between 2 and 500
+	 * house matches user's bet
+	 * if user gets blackjack turn 1 they win twice the pot
+	 * dealer always hits under 17 and stands at 17 or over
+	 */
 	public static void blackjack()
 	{
 		if (player.getChips() < 2)
@@ -228,6 +259,7 @@ public class Blackjack
 		if (selectPlay == 1)
 		{
 			// Resets any prior game conditions
+			bet = 0;
 			pot = 0;
 			player.getHand().getHandCards().clear();
 			dealer.getHand().getHandCards().clear();
@@ -236,26 +268,9 @@ public class Blackjack
 
 			System.out.println("Perfect, lets begin! You have "
 					+ player.getChips()
-					+ " chips. The house will match your bet. How much would you like to bet?"
-					+ "\nEnter a number between 2 and 500.");
-
-			int bet = 0;
-			bet = userInput.nextInt();
-
-			// it'd be nice if these two if statements could jump back up to
-			// entering a bet if they catch the error
-			if ((bet < 2) || (500 < bet))
-			{
-				throw new ArithmeticException(
-						"Please enter a value between 2 and 500");
-			}
-
-			if (player.getChips() < bet)
-			{
-				throw new ArithmeticException(
-						"Not enough chips! Please enter a value between 2 and "
-								+ player.getChips() + ".");
-			}
+					+ " chips.");
+			
+			checkBet();
 
 			pot = 2 * player.bet(bet);
 
@@ -322,8 +337,7 @@ public class Blackjack
 
 					gameState = !checkWin();
 				}
-				// FIXED(?) Standing sometimes ends the game with no
-				// explanation. Figure out why, fix issue
+
 				if (selectPlay == 2)
 				{
 					System.out.println("You stand.");
@@ -335,8 +349,7 @@ public class Blackjack
 
 					System.out
 							.println("Dealer is at "
-									+ dealer.getHand().getHandValue(
-											dealer.getHand().getHandCards())
+									+ getDealerValue()
 									+ ".");
 
 					// Dealer will always hit under 17
