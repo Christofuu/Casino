@@ -101,7 +101,7 @@ private static File txtFile = new File("userData.txt");
                 FileWriter myWriter = new FileWriter("userData.txt", true);
                 PrintWriter myPrintWriter = new PrintWriter(myWriter);
                 
-                myPrintWriter.println(inputId + " " + inputPassword + " "  + inputChips + " "  + inputMoney);
+                myPrintWriter.println(inputId + "/" + inputPassword + "/"  + inputChips + "/"  + inputMoney);
 
                 System.out.println("-----------------------------");
                 System.out.println("You've successfully created account!");
@@ -109,7 +109,7 @@ private static File txtFile = new File("userData.txt");
 
                 myPrintWriter.close();
                 myWriter.close();
-                setAccount(Casino.getPlayer(), inputId, inputPassword, inputChips, inputMoney);
+                //setAccount(Casino.getPlayer(), inputId, inputPassword, inputChips, inputMoney);
 
         } catch(IOException e) {
                 System.out.println("An error occurred");
@@ -127,6 +127,8 @@ private static File txtFile = new File("userData.txt");
         // TODO maybe have to add setChips and setMoney, test more
     }
     
+    //TODO : updateAccount should update txtfile that check userId and userPW and change user chip and usermoney
+
     public static void updateAccount(Player player, String userId, String userPassword, int userChip, int userMoney) 
     {
         player.setId(userId);;
@@ -152,6 +154,9 @@ private static File txtFile = new File("userData.txt");
                     userDataList.add(line);
                 }    
                 
+                /**
+                 * @String userData contains [userID, userPassword, userChip, userCash]
+                 */
                 for (String userData : userDataList) {
                     
                     if  ((userData.contains(userId)))
@@ -230,7 +235,9 @@ private static File txtFile = new File("userData.txt");
                 inputPassword = userInput.next();
                 
                 
-
+                /**
+                 * @String userData contains [userID, userPassword, userChip, userCash]
+                 */
                 for (String userData : userDataList) {
                     
                     if  ((userData.contains(inputId)) && (userData.contains(inputPassword)))
@@ -239,9 +246,10 @@ private static File txtFile = new File("userData.txt");
                             String[] userDataString = userDataList.toArray(new String[3]);
                             String splitUserData = userDataString[0];
 
-                            //Change userData String Array to String
-                            userDataString = splitUserData.split(" ");
+                            //Change userdata String to String array split by '/'
+                            userDataString = splitUserData.split("/");
                             
+
                             //Set Player data from userData.txt
                             final String userId = userDataString[0];
                             final String userPassword = userDataString[1];
@@ -255,13 +263,8 @@ private static File txtFile = new File("userData.txt");
                             bReader.close();
                             loginSuccess = true;
     
-                        } else {    
-                            System.out.println("---------------------------------");
-                            System.out.println("Please Enter Valid userID and Password");
-                            System.out.println("---------------------------------");
-
-                            return;
                         }
+                    
                 }
                
                 
