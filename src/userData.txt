@@ -1,11 +1,2 @@
 
-
-Usernumber : #85769
-userId : jokim
-Password : 8130
-Nickname : Jo
-
-userId : 81301380
-Password : 4131313
-Chip : 
-Cash : 
+hwangjo95 8130kim 0 1000
