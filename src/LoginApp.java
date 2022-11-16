@@ -1,30 +1,100 @@
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
-import javax.annotation.processing.FilerException;
-
+import java.util.*;
+import java.util.regex.*;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-
 import java.io.PrintWriter;
 public class LoginApp {
 
+// Maybe this class should be an interface? include the fields in the casino class?
     //FIELD
 private static Scanner userInput = new Scanner(System.in);
 private static String inputId, inputPassword;
-private static int inputChips;
-private static int inputMoney = 1000;
-public static List<String> userDataList = new ArrayList<String>();
-// private static Player playerData = new Player(Casino.getPlayer().getMoney(), Casino.getPlayer().getChips(), Casino.getPlayer().getPassword(), Casino.getPlayer().getUsername());
+//TODO have user chips and money update from hashmap on login
+//TODO populate hashmap with userdata stored in textfile on program start and termination
+//TODO once done handle hashmap collisions
+public static HashMap<String, String> userDataList = new HashMap<String, String>();
 private static File txtFile = new File("userData.txt");
+private static boolean runState;
+private static String userInfo = "idpass:chips money";
+private static String chipsRegex = "chips^[0-9]$";
+private static String moneyRegex = "money^[0-9]$";
+private static Pattern chipPattern = Pattern.compile(chipsRegex);
+private static Pattern moneyPattern = Pattern.compile(moneyRegex);
+private static Matcher chipMatcher = chipPattern.matcher(userInfo);
+private static Matcher moneyMatcher = moneyPattern.matcher(userInfo);
 
-// private static String userData;
+public LoginApp() {
+}  
 
+
+
+	public static HashMap<String, String> fileToHashMap() {
+		BufferedReader br = null;
+		HashMap<String, String> map = new HashMap<String, String>();
+		
+		try {
+			br = new BufferedReader(new FileReader(txtFile));
+			String line = null;
+			
+			while ((line = br.readLine()) != null) {
+				String[] parts = line.split(":");
+				System.out.println(parts.length);
+				System.out.println(parts);
+				String userAndPass = parts[0].trim();
+				String chipsAndMoney = parts[1].trim();
+				
+				if (!userAndPass.equals("") && !chipsAndMoney.equals("")) {
+					map.put(userAndPass, chipsAndMoney);
+				}
+			}
+		}
+        catch (Exception e){
+            e.printStackTrace();
+        }
+		finally {
+			if (br != null) {
+				try {
+					br.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		return map;
+	}
+	
+	public static void hashMapToFile() {
+		BufferedWriter bf = null;
+		
+		try {
+			bf  = new BufferedWriter(new FileWriter(txtFile));
+			
+			for (Map.Entry<String, String> entry : userDataList.entrySet()) {
+				bf.write(entry.getKey() + ":" + entry.getValue());
+				bf.newLine();
+			}
+			bf.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				bf.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+	}
+
+    
   /**
    * The main function of the program.1
    * 
@@ -32,7 +102,30 @@ private static File txtFile = new File("userData.txt");
    */
   public static void main(String[] args) {
 
-        boolean runState = true;
+        runState = true;
+        
+        try {
+        	if (txtFile.createNewFile()) {
+        		System.out.println("Previous user data not found. Created new data file.");
+        	}
+        	else {
+        		System.out.println("Previous user data found.");
+        	}
+        } catch (IOException e) {
+        	System.out.println("An error occurred.");
+        	e.printStackTrace();
+        }
+        
+        // testing map to text file
+        // https://www.geeksforgeeks.org/reading-text-file-into-java-hashmap/
+        
+        userDataList = fileToHashMap();
+        
+        // prints out hashmap to test if it worked
+        for (Map.Entry<String, String> entry : userDataList.entrySet()) {
+        	System.out.println(entry.getKey() + " : " + entry.getValue());
+        }
+        
         
         do{
             System.out.println("Choose menu");
@@ -43,7 +136,7 @@ private static File txtFile = new File("userData.txt");
             switch(select){
                 
                 case 1:
-                    creatAccount();
+                    createAccount();
                     break;
 
                 case 2:
@@ -67,14 +160,31 @@ private static File txtFile = new File("userData.txt");
         }while(runState);
     }
 
-    public LoginApp() {
-    }  
-
-
+    public static void updateUserInfo()
+    {
+    	if (userDataList.containsKey(Casino.getPlayer().getUsername() + Casino.getPlayer().getPassword())) {
+        	userInfo = userDataList.get(Casino.getPlayer().getUsername() + Casino.getPlayer().getPassword());
+        	
+        	while (chipMatcher.find()) {
+        		if (chipMatcher.group().length() != 0) {
+        			Casino.getPlayer().setChips(Integer.parseInt(chipMatcher.group()));
+        		}
+        	}
+        	while (moneyMatcher.find()) {
+        		if (moneyMatcher.group().length() != 0) {
+        			Casino.getPlayer().setMoney(Integer.parseInt(moneyMatcher.group()));
+        		}
+        	}
+    	}
+    	else {
+    		userInfo = " chips" + Casino.getPlayer().getChips() + " money" + Casino.getPlayer().getMoney() ;//+ " \n";
+    	}
+    }
+    
     /**
      * Creates a new account for the player.
      */
-    public static void creatAccount() {
+    public static void createAccount() {
         
 		boolean validId = false;
 		do {
@@ -82,7 +192,7 @@ private static File txtFile = new File("userData.txt");
             inputId = userInput.next();
             
             if (inputId != null) {
-            	Casino.getPlayer().setId(inputId);
+            	Casino.getPlayer().setUsername(inputId);
             	validId = true;
             } else continue;
             
@@ -90,35 +200,14 @@ private static File txtFile = new File("userData.txt");
             inputPassword = userInput.next();
             Casino.getPlayer().setPassword(inputPassword);
             
+            updateUserInfo();
+            userDataList.put(inputId + inputPassword, userInfo);
+            
 		} while (validId == false);
-       
-        /**
-         * Writes the user's information to the userData.txt.
-         * @param inputId The user's ID.
-         * @param inputPassword The user's password.
-         */
-        try {
-                FileWriter myWriter = new FileWriter("userData.txt", true);
-                PrintWriter myPrintWriter = new PrintWriter(myWriter);
-                
-                myPrintWriter.println(inputId + "/" + inputPassword + "/"  + inputChips + "/"  + inputMoney);
-
-                System.out.println("-----------------------------");
-                System.out.println("You've successfully created account!");
-                System.out.println("-----------------------------");
-
-                myPrintWriter.close();
-                myWriter.close();
-                //setAccount(Casino.getPlayer(), inputId, inputPassword, inputChips, inputMoney);
-
-        } catch(IOException e) {
-                System.out.println("An error occurred");
-                e.printStackTrace();
-            }
         
     }
     
-    private static void setAccount(Player player, String inputId, String inputPassword, int inputChips, int inputMoney)
+    private static void setAccount(Player player, String inputId, String inputPassword, int inputChips, int inputMoney) 
     {
         player.setUsername(inputId);
         player.setPassword(inputPassword);
@@ -129,65 +218,44 @@ private static File txtFile = new File("userData.txt");
     
     //TODO : updateAccount should update txtfile that check userId and userPW and change user chip and usermoney
 
-    public static void updateAccount(Player player, String userId, String userPassword, int userChip, int userMoney) 
+    /*
+     * 
+     */
+    public static void updateAccount() 
     {
-        player.setId(userId);;
-        player.setPassword(userPassword);
-        player.setChips(userChip);
-        player.setMoney(userMoney);
+    	updateUserInfo();
 
         boolean updateAccount  = false;
 
         do {
             
-            try {
-                String line = null;
-                FileReader fileReader = new FileReader(txtFile);
-                List<String> userDataList = new ArrayList<String>();
-                FileWriter myWriter = new FileWriter("userData.txt", true);
-                PrintWriter myPrintWriter = new PrintWriter(myWriter);
-                BufferedReader bReader = new BufferedReader(fileReader);
-
-                //Create ArrayList of user Data [userID, userPassword, userChip, userCash]
-                while ((line = bReader.readLine()) != null)
-                {   
-                    userDataList.add(line);
-                }    
-                
-                /**
-                 * @String userData contains [userID, userPassword, userChip, userCash]
-                 */
-                for (String userData : userDataList) {
-                    
-                    if  ((userData.contains(userId)))
-                    { 
-                        myPrintWriter.println(userId + " " + userPassword + " "  + userChip + " "  + userMoney);
-                        System.out.println("---------------------------------");
-                        System.out.println("Successfully Updated Account");
-                        System.out.println("---------------------------------");
-                        myPrintWriter.close();
-                        bReader.close();
-                        updateAccount = true;
-        
-                    } else{
-                        System.out.println("---------------------------------");
-                        System.out.println("Please Enter Valid ID and Password");
-                        System.out.println("---------------------------------");
-                        return;
-                    }
+        	if (userDataList.containsKey(Casino.getPlayer().getUsername() + Casino.getPlayer().getPassword())) {
+        		// TODO format userinfo assignment here
+        		System.out.println(Casino.getPlayer().getUsername() + Casino.getPlayer().getPassword());
+        		userDataList.replace(Casino.getPlayer().getUsername() + Casino.getPlayer().getPassword(), "chips9999 money9999:" );
+        		
+        		// test print
+        		for (Map.Entry<String, String> entry : userDataList.entrySet()) {
+                	System.out.println(entry.getKey() + ":" + entry.getValue());
                 }
-            
-                
-                    
-          
-
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        
-
-        
+        		
+//            	userInfo = userDataList.get(inputId + inputPassword);
+//            	StringBuffer buffer = new StringBuffer();
+//            	
+//            	//TODO figure out how the fuck regex works
+//            	while (chipMatcher.find()) {
+//            		if (chipMatcher.group().length() != 0) {
+//            			chipMatcher.appendReplacement(buffer, String.valueOf(Casino.getPlayer().getChips()));
+//            		}
+//            	}
+//            	while (moneyMatcher.find()) {
+//            		if (moneyMatcher.group().length() != 0) {
+//            			moneyMatcher.appendReplacement(buffer, String.valueOf(Casino.getPlayer().getChips()));
+//            		}
+//            	}
+            	
+            	updateAccount = true;
+        	}
         }while(updateAccount != true);
     
     }
@@ -215,81 +283,54 @@ private static File txtFile = new File("userData.txt");
         boolean loginSuccess  = false;
 
         do {
-            
-            try {
-                String line = null;
-                FileReader fileReader = new FileReader(txtFile);
-                BufferedReader bReader = new BufferedReader(fileReader);
-                
-                //Create ArrayList of user Data [userID, userPassword, userChip, userCash]
-                while ((line = bReader.readLine()) != null)
-                {   
-                    userDataList.add(line);
-                    System.out.println(userDataList);
-                }
-                
-                //userInput
                 System.out.println("Enter your ID");
                 inputId = userInput.next();
                 System.out.println("Enter Password");
                 inputPassword = userInput.next();
                 
-                
-                /**
-                 * @String userData contains [userID, userPassword, userChip, userCash]
-                 */
-                for (String userData : userDataList) {
-                    
-                    if  ((userData.contains(inputId)) && (userData.contains(inputPassword)))
-                        { 
-                            //Change userDataList to String Array
-                            String[] userDataString = userDataList.toArray(new String[3]);
-                            String splitUserData = userDataString[0];
-
-                            //Change userdata String to String array split by '/'
-                            userDataString = splitUserData.split("/");
-                            
-
-                            //Set Player data from userData.txt
-                            final String userId = userDataString[0];
-                            final String userPassword = userDataString[1];
-                            final int userChip = Integer.valueOf(userDataString[2]);
-                            final int userCash = Integer.valueOf(userDataString[3]);
-    
-                            System.out.println("---------------------------------");
-                            System.out.println("Login Success");
-                            System.out.println("---------------------------------");
-                            setAccount(Casino.getPlayer(), userId, userPassword, userChip, userCash);
-                            bReader.close();
-                            loginSuccess = true;
-    
-                        }
-                    
+                if (userDataList.containsKey(inputId + inputPassword)) {
+                	Casino.getPlayer().setUsername(inputId);
+                	Casino.getPlayer().setPassword(inputPassword);
+                	userInfo = userDataList.get(inputId + inputPassword);
+                	
+                	while (chipMatcher.find()) {
+                		if (chipMatcher.group().length() != 0) {
+                			Casino.getPlayer().setChips(Integer.parseInt(chipMatcher.group()));
+                		}
+                	}
+                	while (moneyMatcher.find()) {
+                		if (moneyMatcher.group().length() != 0) {
+                			Casino.getPlayer().setMoney(Integer.parseInt(moneyMatcher.group()));
+                		}
+                	}
+                	
+                	loginSuccess = true;
                 }
-               
-                
-                    
-            } catch (FileNotFoundException e) {
-                 // TODO Auto-generated catch block
-                 e.printStackTrace();
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-
+                else {
+                	System.out.println("Invalid username or password.");
+                	// exits loop so they aren't stuck if they dont have an account/cant login
+                	loginSuccess = true;
+                }
+ 
         } while (loginSuccess != true);
     }
 
-    public static boolean checkId() {
+    public static boolean checkUsername() {
+
         boolean accountReal = true;
          
         // TODO user has to enter a username with at least 1 character 
-        if (Casino.getPlayer().getId().equals(null))
+        if (Casino.getPlayer().getUsername() == null)
         {
             accountReal = false;
         } 
          
         return accountReal;
         
+    }
+    
+    public static void setRunState(boolean state)
+    {
+    	runState = state;
     }
 }

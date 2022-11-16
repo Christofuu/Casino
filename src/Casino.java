@@ -6,9 +6,9 @@ import java.io.FileWriter;
 public class Casino
 {
 	private static Player player = new Player();
-	private static String userID;
 	private static int optionSelect;
 	private static boolean gameState = true;
+	// TODO make this casinoUserInput
 	private static Scanner userInput = new Scanner(System.in);
 
 	//TODO add cash in/out
@@ -16,15 +16,14 @@ public class Casino
 	//TODO add statistics
 	
 
-	
+	/**
+	 * wip method for writing user data to leaderboard, might be scrapped
+	 * @param username
+	 * @param chips
+	 * @param money
+	 */
 	public static void setUserData(String username, int chips, int money)
 	{
-
-		/* CMD
-		 * 1000 chips
-		 * 10 dollars
-		 *
-		 */
 		try {
 		FileWriter myWriter = new FileWriter("leaderboard.txt");
 		myWriter.write(username + "\tchip : " + chips + "\tCash : $" + money);
@@ -35,19 +34,27 @@ public class Casino
 		}
 		
 	}
-
+	
+	/**
+	 * used to reference current player data
+	 * @return
+	 */
 	public static Player getPlayer()
 	{
 		return player;
 	}
 	
+	/**
+	 * main menu for casino
+	 * @param args
+	 */
 	public static void main(String args[])
 	{
 		do
 		{
-		System.out.println("Hi " + player.getId());
+		System.out.println("Hi " + player.getUsername());
 		System.out.println("Welcome to the Casino! You have " + player.getMoney() + "$ and " + player.getChips() + " chips. Enter the number of the option you wish to select.");
-		System.out.println("1.) Cash in \n2.) Cash out \n3.) Play a game \n4.) Account options \n5.) Exit the casino \n6. Leaderboard");
+		System.out.println("1.) Cash in \n2.) Cash out \n3.) Play a game \n4.) Account options \n5.) Exit the casino \n6.) Leaderboard");
 		
 			optionSelect = userInput.nextInt();
 			
@@ -104,24 +111,29 @@ public class Casino
 				break;
 				
 			case 4:
-				System.out.println("Adding account implementation");
+				System.out.println("LOGIN SYSTEM WIP");
 				LoginApp.main(args);
 				break;
 				
 			case 5:
 				// if no account has been created
-				// TODO create check if player has account method
-				
-				LoginApp.updateAccount(player, player.getId(), player.getPassword(), player.getChips(), player.getMoney());
-				
+				// TODO 
+//				if (LoginApp.checkUsername() == true)
+//				{
+//				LoginApp.updateAccount(player, player.getUsername(), player.getPassword(), player.getChips(), player.getMoney());
+//				}
 			
 				System.out.println("Thanks for playing!");
-				// else update users current account with ending chips and money
+				// update hashmap
+				LoginApp.updateAccount();
+				LoginApp.hashMapToFile();
 				userInput.close();
 				gameState = false;
+				LoginApp.setRunState(false);
 				break;
 			
 			case 6:
+				System.out.println("Coming soon!");
 				break;
 				
 			default:
