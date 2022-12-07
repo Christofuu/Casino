@@ -1,4 +1,4 @@
-import java.util.Scanner;
+import java.util.Scanner; 
 import java.io.IOException;
 import java.io.File;
 import java.io.FileWriter;
@@ -47,6 +47,7 @@ public class Casino
 	/**
 	 * main menu for casino
 	 * @param args
+	 * @throws Exception 
 	 */
 	public static void main(String args[])
 	{

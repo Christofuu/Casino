@@ -1,59 +1,78 @@
 
-import java.util.Scanner;
-import java.util.*;
-import java.util.regex.*;
-import java.io.BufferedReader;
+import java.io.BufferedReader; 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Scanner;
+
+//import org.json.JSONObject;
+import org.json.simple.*;
+import org.json.simple.parser.*;
+
+
+
 public class LoginApp {
 
 // Maybe this class should be an interface? include the fields in the casino class?
     //FIELD
 private static Scanner userInput = new Scanner(System.in);
 private static String inputId, inputPassword;
+private static String[] loginInfo = {inputId, inputPassword};
 //TODO have user chips and money update from hashmap on login
 //TODO populate hashmap with userdata stored in textfile on program start and termination
 //TODO once done handle hashmap collisions
-public static HashMap<String, String> userDataList = new HashMap<String, String>();
-private static File txtFile = new File("userData.txt");
+public static HashMap<String[], Integer[]> userDataList = new HashMap<>();
+private static File userDataFile = new File("userData.json");
 private static boolean runState;
-private static String userInfo = "idpass:chips money";
-private static String chipsRegex = "chips^[0-9]$";
-private static String moneyRegex = "money^[0-9]$";
-private static Pattern chipPattern = Pattern.compile(chipsRegex);
-private static Pattern moneyPattern = Pattern.compile(moneyRegex);
-private static Matcher chipMatcher = chipPattern.matcher(userInfo);
-private static Matcher moneyMatcher = moneyPattern.matcher(userInfo);
+private static JSONObject newUserInfo = new JSONObject();
+private static String[] userInfo = {"username", "password"};
+private static Integer[] userChipsAndCash = {0, 0};
 
 public LoginApp() {
 }  
 
 
 
-	public static HashMap<String, String> fileToHashMap() {
+	/**
+	 * Iterates through JSON File of all users data
+	 * Stores that data locally in a hashmap
+	 * @return
+	 */
+	public static void fileToHashMap() {
+		JSONObject obj;
+		
 		BufferedReader br = null;
-		HashMap<String, String> map = new HashMap<String, String>();
 		
 		try {
-			br = new BufferedReader(new FileReader(txtFile));
-			String line = null;
 			
-			while ((line = br.readLine()) != null) {
-				String[] parts = line.split(":");
-				System.out.println(parts.length);
-				System.out.println(parts);
-				String userAndPass = parts[0].trim();
-				String chipsAndMoney = parts[1].trim();
+			FileReader fileReader = new FileReader(userDataFile);
+			br = new BufferedReader(fileReader);
+			obj = (JSONObject) new JSONParser().parse(br);
+			JSONObject storedUserInfo = obj;
+			JSONArray users = (JSONArray) storedUserInfo.get("Users");
+			
+			for (int i = 0; i < users.size(); i++) {
+				JSONObject currentUser = new JSONObject();
+				currentUser = (JSONObject) users.get(i);
 				
-				if (!userAndPass.equals("") && !chipsAndMoney.equals("")) {
-					map.put(userAndPass, chipsAndMoney);
-				}
+				String username = (String)currentUser.get("Username");
+				String password = (String)currentUser.get("Password");
+				String[] loginData = {username, password};
+				int chips = ((Long) currentUser.get("Chips")).intValue();
+				int money = ((Long) currentUser.get("Money")).intValue();
+				Integer[] userScore = {chips, money};				
+				userDataList.put(loginData, userScore);
 			}
+			
+
 		}
         catch (Exception e){
             e.printStackTrace();
@@ -67,26 +86,31 @@ public LoginApp() {
 				}
 			}
 		}
-		
-		return map;
 	}
 	
+	// TODO update for JSON implementaion
+	// rewrite whole json? or just whats been updated?
+	// if there's an easy way to have this update a single entry, we can call it as needed
 	public static void hashMapToFile() {
-		BufferedWriter bf = null;
+		PrintWriter pw = null;
 		
 		try {
-			bf  = new BufferedWriter(new FileWriter(txtFile));
-			
-			for (Map.Entry<String, String> entry : userDataList.entrySet()) {
-				bf.write(entry.getKey() + ":" + entry.getValue());
-				bf.newLine();
+			pw  = new PrintWriter(new FileWriter(userDataFile));
+			// bf.write(((JSONAware) obj).toJSONString());
+			pw.println("{\n\"Users\": [");
+			for (Map.Entry<String[], Integer[]> entry : userDataList.entrySet()) {
+				pw.println("{\n\"Username\": \"" + entry.getKey()[0] + "\",");
+				pw.println("\"Password\": \"" + entry.getKey()[1] + "\",");
+				pw.println("\"Chips\": \"" + entry.getValue()[0] + "\",");
+				pw.println("\"Money\": \"" + entry.getValue()[1] + "\"\n},");
 			}
-			bf.flush();
+			pw.println("]\n}");
+			pw.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
 			try {
-				bf.close();
+				pw.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -105,7 +129,7 @@ public LoginApp() {
         runState = true;
         
         try {
-        	if (txtFile.createNewFile()) {
+        	if (userDataFile.createNewFile()) {
         		System.out.println("Previous user data not found. Created new data file.");
         	}
         	else {
@@ -119,10 +143,10 @@ public LoginApp() {
         // testing map to text file
         // https://www.geeksforgeeks.org/reading-text-file-into-java-hashmap/
         
-        userDataList = fileToHashMap();
+        fileToHashMap();
         
         // prints out hashmap to test if it worked
-        for (Map.Entry<String, String> entry : userDataList.entrySet()) {
+        for (Map.Entry<String[], Integer[]> entry : userDataList.entrySet()) {
         	System.out.println(entry.getKey() + " : " + entry.getValue());
         }
         
@@ -148,7 +172,15 @@ public LoginApp() {
                 //     break;
 
                 case 4:
-                    Casino.main(args);
+                    try
+					{
+						Casino.main(args);
+					}
+					catch (Exception e)
+					{
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
                     break;
 
 
@@ -160,25 +192,11 @@ public LoginApp() {
         }while(runState);
     }
 
+  	// TODO Rewrite this for JSON implementation
     public static void updateUserInfo()
     {
-    	if (userDataList.containsKey(Casino.getPlayer().getUsername() + Casino.getPlayer().getPassword())) {
-        	userInfo = userDataList.get(Casino.getPlayer().getUsername() + Casino.getPlayer().getPassword());
-        	
-        	while (chipMatcher.find()) {
-        		if (chipMatcher.group().length() != 0) {
-        			Casino.getPlayer().setChips(Integer.parseInt(chipMatcher.group()));
-        		}
-        	}
-        	while (moneyMatcher.find()) {
-        		if (moneyMatcher.group().length() != 0) {
-        			Casino.getPlayer().setMoney(Integer.parseInt(moneyMatcher.group()));
-        		}
-        	}
-    	}
-    	else {
-    		userInfo = " chips" + Casino.getPlayer().getChips() + " money" + Casino.getPlayer().getMoney() ;//+ " \n";
-    	}
+    	loginInfo[0] = inputId;
+    	loginInfo[1] = inputPassword;
     }
     
     /**
@@ -201,7 +219,7 @@ public LoginApp() {
             Casino.getPlayer().setPassword(inputPassword);
             
             updateUserInfo();
-            userDataList.put(inputId + inputPassword, userInfo);
+            userDataList.put(loginInfo, userChipsAndCash);
             
 		} while (validId == false);
         
@@ -229,30 +247,15 @@ public LoginApp() {
 
         do {
             
-        	if (userDataList.containsKey(Casino.getPlayer().getUsername() + Casino.getPlayer().getPassword())) {
+        	if (userDataList.containsKey(loginInfo)) {
         		// TODO format userinfo assignment here
-        		System.out.println(Casino.getPlayer().getUsername() + Casino.getPlayer().getPassword());
-        		userDataList.replace(Casino.getPlayer().getUsername() + Casino.getPlayer().getPassword(), "chips9999 money9999:" );
+        		System.out.println(Casino.getPlayer().getUsername() + " " + Casino.getPlayer().getPassword());
+        		userDataList.replace(loginInfo, userChipsAndCash);
         		
         		// test print
-        		for (Map.Entry<String, String> entry : userDataList.entrySet()) {
+        		for (Map.Entry<String[], Integer[]> entry : userDataList.entrySet()) {
                 	System.out.println(entry.getKey() + ":" + entry.getValue());
                 }
-        		
-//            	userInfo = userDataList.get(inputId + inputPassword);
-//            	StringBuffer buffer = new StringBuffer();
-//            	
-//            	//TODO figure out how the fuck regex works
-//            	while (chipMatcher.find()) {
-//            		if (chipMatcher.group().length() != 0) {
-//            			chipMatcher.appendReplacement(buffer, String.valueOf(Casino.getPlayer().getChips()));
-//            		}
-//            	}
-//            	while (moneyMatcher.find()) {
-//            		if (moneyMatcher.group().length() != 0) {
-//            			moneyMatcher.appendReplacement(buffer, String.valueOf(Casino.getPlayer().getChips()));
-//            		}
-//            	}
             	
             	updateAccount = true;
         	}
@@ -266,6 +269,7 @@ public LoginApp() {
      * 
      * @return Whether the login was successful.
      */
+    // TODO rewrite for JSON implementation
     private static void loginAccount() {
 
         /**
@@ -280,6 +284,8 @@ public LoginApp() {
         // if not found return invalid id
         // if found check if line below contains correct password
         // if both true login account
+    	//TODO arrays are objects so the hashmap wont treat a new array with user input as equal to stored key, because of diff hashcodes
+    	// find soln
         boolean loginSuccess  = false;
 
         do {
@@ -287,23 +293,17 @@ public LoginApp() {
                 inputId = userInput.next();
                 System.out.println("Enter Password");
                 inputPassword = userInput.next();
+                loginInfo[0] = inputId;
+                loginInfo[1] = inputPassword;
                 
-                if (userDataList.containsKey(inputId + inputPassword)) {
+                if (userDataList.containsKey(loginInfo)) {
                 	Casino.getPlayer().setUsername(inputId);
                 	Casino.getPlayer().setPassword(inputPassword);
-                	userInfo = userDataList.get(inputId + inputPassword);
-                	
-                	while (chipMatcher.find()) {
-                		if (chipMatcher.group().length() != 0) {
-                			Casino.getPlayer().setChips(Integer.parseInt(chipMatcher.group()));
-                		}
-                	}
-                	while (moneyMatcher.find()) {
-                		if (moneyMatcher.group().length() != 0) {
-                			Casino.getPlayer().setMoney(Integer.parseInt(moneyMatcher.group()));
-                		}
-                	}
-                	
+                	userChipsAndCash = userDataList.get(loginInfo);
+
+                	Casino.getPlayer().setChips(userChipsAndCash[0]);
+                	Casino.getPlayer().setMoney(userChipsAndCash[1]);
+
                 	loginSuccess = true;
                 }
                 else {
