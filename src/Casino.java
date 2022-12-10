@@ -44,6 +44,10 @@ public class Casino
 		return player;
 	}
 	
+	public static int getPlayerScore() {
+		return player.getChips() + player.getMoney();
+	}
+	
 	/**
 	 * main menu for casino
 	 * @param args
@@ -53,9 +57,14 @@ public class Casino
 	{
 		do
 		{
+		if (player.getUsername() == (null)) {
+			System.out.println("Welcome to the casino! Please enter your username.");
+			String username = userInput.next();
+			Casino.getPlayer().setUsername(username);
+		}
 		System.out.println("Hi " + player.getUsername());
 		System.out.println("Welcome to the Casino! You have " + player.getMoney() + "$ and " + player.getChips() + " chips. Enter the number of the option you wish to select.");
-		System.out.println("1.) Cash in \n2.) Cash out \n3.) Play a game \n4.) Account options \n5.) Exit the casino \n6.) Leaderboard");
+		System.out.println("1.) Cash in \n2.) Cash out \n3.) Play a game \n4.) Leaderboard \n5.) Exit the casino");
 		
 			optionSelect = userInput.nextInt();
 			
@@ -112,29 +121,15 @@ public class Casino
 				break;
 				
 			case 4:
-				System.out.println("LOGIN SYSTEM WIP");
-				LoginApp.main(args);
+				System.out.println("LEADERBOARD WIP");
+				Leaderboard.main(args);
 				break;
 				
-			case 5:
-				// if no account has been created
-				// TODO 
-//				if (LoginApp.checkUsername() == true)
-//				{
-//				LoginApp.updateAccount(player, player.getUsername(), player.getPassword(), player.getChips(), player.getMoney());
-//				}
-			
+			case 5:			
 				System.out.println("Thanks for playing!");
-				// update hashmap
-				LoginApp.updateAccount();
-				LoginApp.hashMapToFile();
+				Leaderboard.updateLeaderboard();
 				userInput.close();
 				gameState = false;
-				LoginApp.setRunState(false);
-				break;
-			
-			case 6:
-				System.out.println("Coming soon!");
 				break;
 				
 			default:
