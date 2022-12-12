@@ -1,10 +1,8 @@
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -16,9 +14,9 @@ public class Leaderboard
 	// score will be chips + cash
 	private static File leaderboardData = new File("leaderboard.json");
 	
-	public static void leaderboardToString() {
+	public static String leaderboardToString() {
 		JSONObject obj;
-		
+		String leaderboardString = "";
 		BufferedReader br = null;
 		
 		try {
@@ -38,7 +36,7 @@ public class Leaderboard
 				int chips = ((Long) currentUser.get("Chips")).intValue();
 				int money = ((Long) currentUser.get("Money")).intValue();
 				
-				System.out.println(i + ".) " + username + "\nScore: " + score + "\nChips: " + chips + "\nMoney: " + money);
+				leaderboardString += i + ".) " + username + "\nScore: " + score + "\nChips: " + chips + "\nMoney: " + money + "\n";
 			}
 			
 
@@ -55,6 +53,7 @@ public class Leaderboard
 				}
 			}
 		}
+		return leaderboardString;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -145,8 +144,8 @@ public class Leaderboard
 		}
 	}
 	
-	public static void main(String args[]) {
+	public static void main(String args[]) {		
 		updateLeaderboard();
-		leaderboardToString();
+		System.out.println(leaderboardToString());
 	}
 }
