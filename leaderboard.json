@@ -1,6 +1,10 @@
 {
 "Users":[
 {"Money":1000,"Score":1234,"Username":"chris","Chips":1000},
-{"Money":1000,"Score":6969,"Username":"jo","Chips":1000}
+{"Money":1000,"Score":6969,"Username":"jo","Chips":1000},
+{"Money":1000,"Score":1000,"Username":"chr","Chips":0},
+{"Money":1000,"Score":1000,"Username":"cmd","Chips":0},
+{"Money":1000,"Score":1000,"Username":"Chris","Chips":0},
+{"Money":1000,"Score":1000,"Username":"Chris","Chips":0}
 ]
 }

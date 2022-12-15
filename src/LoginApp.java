@@ -1,5 +1,5 @@
 
-import java.io.BufferedReader;  
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
@@ -216,7 +216,6 @@ public LoginApp() {
             
             System.out.println("Enter Password");
             inputPassword = userInput.next();
-            Casino.getPlayer().setPassword(inputPassword);
             
             updateUserInfo();
             userDataList.put(loginInfo, userChipsAndCash);
@@ -228,7 +227,6 @@ public LoginApp() {
     private static void setAccount(Player player, String inputId, String inputPassword, int inputChips, int inputMoney) 
     {
         player.setUsername(inputId);
-        player.setPassword(inputPassword);
         player.setChips(inputChips);
         player.setMoney(inputMoney);
         // TODO maybe have to add setChips and setMoney, test more
@@ -249,7 +247,7 @@ public LoginApp() {
             
         	if (userDataList.containsKey(loginInfo)) {
         		// TODO format userinfo assignment here
-        		System.out.println(Casino.getPlayer().getUsername() + " " + Casino.getPlayer().getPassword());
+        		System.out.println(Casino.getPlayer().getUsername() + " ");
         		userDataList.replace(loginInfo, userChipsAndCash);
         		
         		// test print
@@ -298,7 +296,6 @@ public LoginApp() {
                 
                 if (userDataList.containsKey(loginInfo)) {
                 	Casino.getPlayer().setUsername(inputId);
-                	Casino.getPlayer().setPassword(inputPassword);
                 	userChipsAndCash = userDataList.get(loginInfo);
 
                 	Casino.getPlayer().setChips(userChipsAndCash[0]);

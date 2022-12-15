@@ -1,7 +1,5 @@
-import java.util.Scanner; 
-import java.io.IOException;
-import java.io.File;
-import java.io.FileWriter;
+
+import java.util.Scanner;
 
 public class Casino
 {
@@ -14,26 +12,6 @@ public class Casino
 	//TODO add cash in/out
 	//TODO add leaderboard has to sort by chips earned 
 	//TODO add statistics
-	
-
-	/**
-	 * wip method for writing user data to leaderboard, might be scrapped
-	 * @param username
-	 * @param chips
-	 * @param money
-	 */
-	public static void setUserData(String username, int chips, int money)
-	{
-		try {
-		FileWriter myWriter = new FileWriter("leaderboard.txt");
-		myWriter.write(username + "\tchip : " + chips + "\tCash : $" + money);
-		myWriter.close();
-		} catch(IOException e) {
-			System.out.println("An error occurred");
-			e.printStackTrace();
-		}
-		
-	}
 	
 	/**
 	 * used to reference current player data

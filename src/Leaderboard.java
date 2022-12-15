@@ -1,10 +1,8 @@
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -15,6 +13,10 @@ public class Leaderboard
 	// this class will write the data of the current user to a json array of scores
 	// score will be chips + cash
 	private static File leaderboardData = new File("leaderboard.json");
+	
+	public Leaderboard() {
+		
+	}
 	
 	public static void leaderboardToString() {
 		JSONObject obj;

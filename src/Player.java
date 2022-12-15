@@ -27,9 +27,6 @@
 public class Player
 {
 	///// FIELDS /////
-	
-	private String id;
-	private String password;
 	private String username;
 	private int money = 1000;
 	private int chips = 0;
@@ -40,52 +37,20 @@ public class Player
 	{
 	}
 	
-	Player(String username, int money, int chips, String id, String password, String userName)
+	Player(String username, int money, int chips, String userName)
 	{
 		this.username = username;
 		this.money = money;
 		this.chips = chips;
-		this.id = id;
-		this.password = password;
 		this.username = userName;
 	}
 	
-	Player(String id, String password, String userName)
+	Player(String userName)
 	{
-		this.id = id;
-		this.password = password;
 		this.username = userName;
 	}
 
 	///// METHODS /////
-	
-	/**
-	 * @return id
-	 */
-	public String getId() {
-		return id;
-	}
-	
-	/**
-	 * @param id
-	 */
-	public void setId(String id) {
-		this.id = id;
-	}
-	
-	/**
-	 * @return password
-	 */
-	public String getPassword() {
-		return password;
-	}
-	
-	/**
-	 * @param password
-	 */
-	public void setPassword(String password) {
-		this.password = password;
-	}
 	
 	/**
 	 * @return username
