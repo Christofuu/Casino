@@ -213,7 +213,7 @@ public class gamePageGUI extends JFrame {
 		JButton cashAddJButton = new JButton("Cash In");
 		cashAddJButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Casino.getPlayer().cashIn(cashInTextField.getText().);
+				//Casino.getPlayer().cashIn(cashInTextField.getText().);
 			}
 		});
 		cashAddJButton.setBounds(299, 60, 117, 16);
