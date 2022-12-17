@@ -1,10 +1,12 @@
 {
 "Users":[
+{"Money":900,"Score":1900,"Username":"Player 1","Chips":1000},
 {"Money":1000,"Score":1234,"Username":"chris","Chips":1000},
-{"Money":1000,"Score":6969,"Username":"jo","Chips":1000},
-{"Money":1000,"Score":1000,"Username":"chr","Chips":0},
-{"Money":1000,"Score":1000,"Username":"cmd","Chips":0},
-{"Money":1000,"Score":1000,"Username":"Chris","Chips":0},
-{"Money":1000,"Score":1000,"Username":"Chris","Chips":0}
+{"Money":1000,"Score":1200,"Username":"jo","Chips":200},
+{"Money":900,"Score":1100,"Username":"Player 2","Chips":200},
+{"Money":950,"Score":1000,"Username":"Player 3","Chips":50},
+{"Money":900,"Score":1000,"Username":"Player 4","Chips":100},
+{"Money":900,"Score":1000,"Username":"Player 5","Chips":100},
+{"Money":1000,"Score":1000,"Username":"chr","Chips":0}
 ]
 }

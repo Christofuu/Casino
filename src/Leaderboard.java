@@ -18,9 +18,9 @@ public class Leaderboard
 		
 	}
 	
-	public static void leaderboardToString() {
+	public static String leaderboardToString() {
 		JSONObject obj;
-		
+		String leaderboardString = "";
 		BufferedReader br = null;
 		
 		try {
@@ -40,7 +40,7 @@ public class Leaderboard
 				int chips = ((Long) currentUser.get("Chips")).intValue();
 				int money = ((Long) currentUser.get("Money")).intValue();
 				
-				System.out.println(i + ".) " + username + "\nScore: " + score + "\nChips: " + chips + "\nMoney: " + money);
+				leaderboardString += i + ".) " + username + "\nScore: " + score + "\nChips: " + chips + "\nMoney: " + money + "\n";
 			}
 			
 
@@ -57,6 +57,7 @@ public class Leaderboard
 				}
 			}
 		}
+		return leaderboardString;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -147,8 +148,7 @@ public class Leaderboard
 		}
 	}
 	
-	public static void main(String args[]) {
+	public static void main(String args[]) {		
 		updateLeaderboard();
-		leaderboardToString();
 	}
 }

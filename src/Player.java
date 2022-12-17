@@ -88,10 +88,15 @@ public class Player
 	 * turns specified amount of money into chips
 	 * @param money
 	 */
-	public void cashIn(int money)
+	public boolean cashIn(int money)
 	{
-		this.money -= money;
-		this.chips += money;
+		if ((money > 0) && (money <= getMoney()))
+		{
+			this.money -= money;
+			this.chips += money;
+			return true;
+		}
+		return false;
 	}
 	
 	/**

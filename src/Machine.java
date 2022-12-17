@@ -37,7 +37,8 @@ public class Machine
 	private static int winningMultiplier;
 	private static int loseMultiplier;; 
 	private static boolean winOrLose;
-	
+	private static String[] slotElements = {"Cherry", "Orange", "Plum", "Apple", "Bell", "Melon", "Bar", "Seven"};
+	private static String slot1Element = null, slot2Element = null, slot3Element = null;
 	private Random randomeNumber = new Random();
 	
 	public Machine()
@@ -52,9 +53,6 @@ public class Machine
 		slot1 = randomeNumber.nextInt(8);
 		slot2 = randomeNumber.nextInt(8);
 		slot3 = randomeNumber.nextInt(8);
-		
-		String[] slotElements = {"Cherry", "Orange", "Plum", "Apple", "Bell", "Melon", "Bar", "Seven"};
-		String slot1Element = null, slot2Element = null, slot3Element = null;
 		
 		slot1Element = slotElements[slot1];
 		slot2Element = slotElements[slot2];
@@ -140,6 +138,17 @@ public class Machine
 	public int getLoseMultiplier()
 	{
 		return loseMultiplier;
+	}
+	
+	public String getSlot1Element() {
+		return slot1Element;
+	}
+	
+	public String getSlot2Element() {
+		return slot2Element;
+	}
+	public String getSlot3Element() {
+		return slot3Element;
 	}
 	
 	public int getSlot1() {

@@ -38,17 +38,12 @@ public class Blackjack
 	// Blackjack HAS-A pot
 	private static int pot;
 	private static int bet = 0;
-	// selectPlay dictates initially if the user plays,
-	// and if the user keeps playing after each game ends
-	private static int selectPlay;
-	// Blackjack HAS user input
-	private static Scanner userInput = new Scanner(System.in);
-	// true when no win conditions have been met, else false
 	// blackjack method will execute while gameState == true
-	private static boolean gameState = true;
+	private static boolean gameState = false;
 	// false when user chooses to play/keeps playing blackjack
 	// true when user quits, when true program exits
 	private static boolean exitState;
+	private static boolean playerWin = true;
 
 	public Blackjack()
 	{
@@ -82,7 +77,7 @@ public class Blackjack
 	 */
 	public static String playerHandToString()
 	{
-		return "Your hand: " + player.getHand().getHandCards().toString();
+		return player.getHand().getHandCards().toString();
 	}
 
 	/**
@@ -91,7 +86,15 @@ public class Blackjack
 	 */
 	public static String dealerHandToString()
 	{
-		return "Dealers hand: " + dealer.getHand().getHandCards().toString();
+		return dealer.getHand().getHandCards().toString();
+	}
+	
+	public static boolean getPlayerWin() {
+		return playerWin;
+	}
+	
+	public static boolean getGameState() {
+		return gameState;
 	}
 
 	/**
@@ -112,42 +115,38 @@ public class Blackjack
 		// case a: user wins with blackjack
 		if (playerCount == 21)
 		{
+			System.out.println("win condition a");
 			player.payout(pot);
-			System.out.println("Blackjack! You won " + pot
-					+ " chips and now have " + player.getChips() + " chips!");
+			return win;
 		}
 		// case b: user wins with dealer bust
-		else if (dealerCount > 21)
+		if (dealerCount > 21 && playerCount < 21)
 		{
+			System.out.println("win condition b");
 			player.payout(pot);
-			System.out.println("Dealer busts! You won " + pot
-					+ " chips and now have " + player.getChips() + " chips!");
+			return win;
 		}
 		// case c: user wins where 17 < dealerCount < 21 && dealerCount <
 		// userCount < 21
-		else if ((17 <= dealerCount) && (dealerCount < 21)
+		if ((17 <= dealerCount) && (dealerCount < 21)
 				&& (dealerCount < playerCount) && (playerCount < 21))
 		{
+			System.out.println("win condition c");
 			player.payout(pot);
-			System.out.println("You win (dealer can't hit past 17)! You won "
-					+ pot + " chips and now have " + player.getChips()
-					+ " chips!");
+			return win;
 		}
-		// case d: dealer wins with blackjack
-		else if (dealerCount == 21)
+		// case d: dealer wins with blackjack or player busts
+		if (dealerCount == 21 || playerCount > 21)
 		{
-			System.out.println("Dealer blackjack! You have " + player.getChips()
-					+ " left.");
-		}
-		// case e: dealer wins with user bus
-		else if (playerCount > 21)
-		{
-			System.out.println("Bust! You have " + player.getChips() + " left");
+			System.out.println("win condition d");
+			playerWin = false;
+			return win;
 		}
 		// case f: no win condition (dealer under 17, no player blackjack)
 		// if the game is not cases a-e, then it's either f or g, which both
 		// return true
-		else win = false;
+		System.out.println("no win condition met");
+		win = false;
 
 		return win;
 	}
@@ -172,31 +171,34 @@ public class Blackjack
 		dealer.dealCard(dealer.getHand());
 	}
 
-	public static void checkBet()
-	{
-		boolean validBet = false;
-		
-		do
-		{
-		System.out.println("The house will match your bet. How much would you like to bet?"
-					+ "\nEnter a number between 2 and 500.");
-			
-		bet = userInput.nextInt();
-		
+	/**
+	 * checks if bet is valid, returns true if it is and false otherwise
+	 * @param bet
+	 * @return boolean
+	 */
+	public static boolean checkBet(int bet)
+	{	
 		if ((bet < 2) || (500 < bet))
 		{
-			System.out.println(
-					"Please enter a value between 2 and 500");
+			return false;
 		}
 		else if (player.getChips() < bet)
 		{
-			System.out.println(
-					"Not enough chips! Please enter a value between 2 and "
-							+ player.getChips() + ".");
+			return false;
 		}
-		else validBet = true;
-		
-		} while(validBet == false);
+		return true;
+	}
+	
+	public static void setBet(int val) {
+		bet = val;
+	}
+	
+	public static void setPot() {
+		pot = 2 * player.bet(bet);
+	}
+	
+	public static int getPot() {
+		return pot;
 	}
 	///// MAIN METHOD /////
 
@@ -211,24 +213,19 @@ public class Blackjack
 	{
 		do
 		{
-			blackjack();
-			System.out.println(
-					"Do you want to play again? \nEnter 1 for yes, 2 to return to the Casino.");
-			selectPlay = userInput.nextInt();
-
-			if (selectPlay == 1)
-			{
-				exitState = true;
-			}
-			else
-			{
-				exitState = false;
-				System.out.println("Returning to Casino. Thanks for playing!");
-			}
+			blackjack(bet);
 
 		} while (exitState);
 	}
-
+	
+	public static void resetGameConditions() {
+		bet = 0;
+		pot = 0;
+		player.getHand().getHandCards().clear();
+		dealer.getHand().getHandCards().clear();
+		dealer.getDeck().setDeck();
+		dealer.getDeck().shuffleDeck(dealer.getDeck());
+	}
 	///// GAME LOGIC /////
 
 	/**
@@ -238,46 +235,14 @@ public class Blackjack
 	 * if user gets blackjack turn 1 they win twice the pot
 	 * dealer always hits under 17 and stands at 17 or over
 	 */
-	public static void blackjack()
+	public static void blackjack(int val)
 	{
-		if (player.getChips() < 2)
-		{
-			System.out.println("Not enough chips! Returning to casino.");
-			return;
-		}
-		System.out.println(
-				"Welcome to Blackjack! Would you like to play? \nEnter 1 for yes, 2 to return to the Casino.");
-
-		selectPlay = userInput.nextInt();
-
-		if (selectPlay == 2)
-		{
-			return;
-		}
-
-		// input of 1 initializes game
-		if (selectPlay == 1)
-		{
 			// Resets any prior game conditions
-			bet = 0;
-			pot = 0;
-			player.getHand().getHandCards().clear();
-			dealer.getHand().getHandCards().clear();
-			dealer.getDeck().setDeck();
-			dealer.getDeck().shuffleDeck(dealer.getDeck());
+			gameState = true;
 
-			System.out.println("Perfect, lets begin! You have "
-					+ player.getChips()
-					+ " chips.");
+			bet = val;
+			setPot();
 			
-			checkBet();
-
-			pot = 2 * player.bet(bet);
-
-			System.out.println("You bet: " + (pot / 2) + " chips and have: "
-					+ player.getChips() + " chips remaining. "
-					+ "\nThe pot is: " + pot + "\nLet's begin.");
-
 			for (int i = 0; i < 2; i++)
 			{
 				dealer.dealCard(player.getHand());
@@ -296,9 +261,6 @@ public class Blackjack
 			if (getPlayerValue() == 21)
 			{
 				player.payout(pot * 2);
-				System.out.println("Natural! You won " + (pot * 2)
-						+ " chips. You now have " + player.getChips()
-						+ " chips.");
 				pot = 0;
 
 				return;
@@ -307,11 +269,9 @@ public class Blackjack
 			if (getDealerValue() == 21)
 			{
 				pot = 0;
-				System.out.println("House wins! You have " + player.getChips()
-						+ " chips.");
-
 				return;
 			}
+	}
 
 			// ROUND 2+ (will loop until game is over)//
 
@@ -319,63 +279,25 @@ public class Blackjack
 			// II.) checkWin()
 			// III.) Dealer hits or stands
 			// IV.) checkWin()
-
-			do
+	public static boolean blackjackLoop() {
+		// USER BEHAVIOR //
+		// DEALER BEHAVIOR //
+		if (checkWin() == false)
 			{
-				// USER BEHAVIOR //
-				System.out.println("You are at " + getPlayerValue()
-						+ ". Dealer is at " + getDealerValue()
-						+ ". Enter 1 to hit, 2 to stand.");
-
-				selectPlay = userInput.nextInt();
-				if (selectPlay == 1)
+			// Dealer will always hit under 17
+			if (getDealerValue() < 17)
 				{
-					System.out.println("You hit.");
-					playerHit();
-					System.out.println(playerHandToString());
-					System.out.println("You are at " + getPlayerValue() + ".");
+					// Dealer hits, show dealers card, then output if dealer
+					// busts, if not output where dealer is at
+					dealerHit();
 
-					gameState = !checkWin();
+					// if player didn't win (checkWin() == false) then
+					// gameState is true (game is still going) and vice
+					// versa
+					
 				}
-
-				if (selectPlay == 2)
-				{
-					System.out.println("You stand.");
-				}
-
-				// DEALER BEHAVIOR //
-				if (gameState == true)
-				{
-
-					System.out
-							.println("Dealer is at "
-									+ getDealerValue()
-									+ ".");
-
-					// Dealer will always hit under 17
-					if (getDealerValue() < 17)
-					{
-						// Dealer hits, show dealers card, then output if dealer
-						// busts, if not output where dealer is at
-						dealerHit();
-						System.out.println("Dealer hits.");
-						System.out.println(dealerHandToString());
-
-						// if player didn't win (checkWin() == false) then
-						// gameState is true (game is still going) and vice
-						// versa
-						gameState = !checkWin();
-					}
-
-					// Dealer will always stand at 17 or over
-					else if (getDealerValue() >= 17)
-					{
-						System.out.println("Dealer stands.");
-					}
-
-				}
-
-			} while (gameState);
-		}
+				// Dealer will always stand at 17 or over
+			}
+		return !checkWin();
 	}
 }
